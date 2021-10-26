@@ -2,7 +2,7 @@
 <body>
 <?php
 /*
-	select ingrediente.nome as nomeingrediente, sabor.nome as saboringrediente from ingrediente
+	select ingrediente.nome as nomeingrediente from ingrediente
 	join saboringrediente on saboringrediente.ingrediente=ingrediente.codigo
 	join sabor on saboringrediente.sabor=sabor.codigo
 
@@ -65,15 +65,23 @@ $orderby = (isset($_GET["orderby"])) ? $_GET["orderby"] : "codigo asc";
 $offset = (isset($_GET["offset"])) ? max(0, min($_GET["offset"], $total-1)) : 0;
 $offset = $offset-($offset%$limit);
 
-$results = $db->query("select * from sabor ".$where." order by ".$orderby." limit ".$limit." offset ".$offset);
+$results = $db->query("	select * from sabor ".$where." order by ".$orderby." limit ".$limit." offset ".$offset);
+
 while ($row = $results->fetchArray()){
 	echo "<tr>\n";
 	echo "<td><a href=\"pizzariaC.php?codigo=".$row["nome"]."\">&#x1F4DD;</a></td>\n";
 	echo "<td>".$row["nome"]."</td>\n";
 	echo "<td>".$row["tipo"]."</td>\n";
-	//echo "<td>".$row["ingredientes"]."</td>\n";
+	echo "<td>\n";
+$results2 = $db->query("select ingrediente.nome as ingrediente,sabor.nome as sabor, tipo.nome as tipo from sabor join saboringrediente on saboringrediente.sabor=sabor.codigo join ingrediente on saboringrediente.ingrediente=ingrediente.codigo join tipo on sabor.tipo = tipo.codigo where sabor.codigo= ".$row["codigo"]);
+while ($row2 = $results2->fetchArray()){
+	echo $row2["ingrediente"];
+}
+	echo "</td>\n";
 	echo "<td><a href=\"delete.php?codigo=".$row["nome"]."\" onclick=\"return(confirm('Excluir ".$row["nome"]."?'));\">&#x1F5D1;</a></td>\n";
 	echo "</tr>\n";
+
+
 }
 
 echo "</table>\n";
@@ -91,3 +99,8 @@ $db->close();
 
 
 
+select sabor.nome as sabores, tipo.nome as tipo
+from saboringrediente 
+join sabor on saboringrediente.sabor = sabor.codigo
+join ingrediente on saboringrediente.ingrediente = ingrediente.codigo
+join tipo on sabor.tipo = tipo.codigo

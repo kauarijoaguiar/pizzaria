@@ -5,8 +5,12 @@
 //.headers on
 //.mode column
 //PRAGMA foreign_keys = ON;
-
-
+/*
+"select ... where codigo = 2"
+"select ... where codigo = ".$row["codigo"]
+"<option value=\"bacon\">bacon</option>"
+"<option value=\"".$row["codigo"]."\">".$row["nome"]."</option>";
+*/
 		$db = new SQLite3("pizzaria.db");
 		$db->exec("PRAGMA foreign_keys = ON");
 		echo "<form name=\"insert\" action=\"pizzariaB.php\" method=\"post\">\n";

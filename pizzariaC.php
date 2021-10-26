@@ -1,11 +1,11 @@
 <html>
 <body>
 <?php
-
-//.headers on
-//.mode column
-//PRAGMA foreign_keys = ON;
-
+/*
+.headers on
+.mode column
+PRAGMA foreign_keys = ON;
+*/
 
 		$db = new SQLite3("pizzaria.db");
 		$db->exec("PRAGMA foreign_keys = ON");
