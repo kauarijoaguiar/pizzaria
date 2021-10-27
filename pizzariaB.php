@@ -16,6 +16,8 @@ if (isset($_POST["inclui"])) {
 	if ($error == "") {
 		$db = new SQLite3("pizzaria.db");
 		$db->exec("PRAGMA foreign_keys = ON");
+		//$db->exec("insert into sabor (nome, tipo) values ('".$_POST["nome"]."', '".$_POST["tipo"]."')");
+		//$db->exec("insert into ingrediente (nome) values ('".$_POST["ingrediente"]."')");
 		//echo $db->changes()." pessoa(s) incluída(s)<br>\n";
 		//echo $db->lastInsertRowID()." é o código da última pessoa incluída.\n";
 		$db->close();
