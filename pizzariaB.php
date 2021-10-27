@@ -24,8 +24,11 @@ if (isset($_POST["inclui"])) {
 	}else{
 		echo "<font color=\"red\">".$error."</font>";
 	}
-}else{
-		echo "<form name=\"insert\" action=\"pizzariaC.php\" method=\"post\">\n";
+}else
+{
+	$db = new SQLite3("pizzaria.db");
+
+		echo "<form name=\"insert\" action=\"pizzariaB.php\" method=\"post\">\n";
 		echo "<table>\n";
 		echo "<tr>\n";
 		echo "<td>Nome</td>\n";
@@ -62,7 +65,7 @@ if (isset($_POST["inclui"])) {
 </body>
 <?php
 if (isset($_POST["inclui"])) {
-	echo "<script>setTimeout(function () { window.open(\"select.php\",\"_self\"); }, 3000);</script>";
+	echo "<script>setTimeout(function () { window.open(\"pizzariaA.php\",\"_self\"); }, 3000);</script>";
 }
 ?>
 </html>
