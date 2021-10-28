@@ -10,6 +10,24 @@ PRAGMA foreign_keys = ON;
 OBS: QUANDO EU COLOCO ESSA LINHA "$db = new SQLite3("pizzaria.db");" DENTRO DO ELSE
 OS SELECTS FUNCIONAM MAS SE EU COLOCO FORA, DENTRO DO SEGUNDO IF, ELE PARA
 */
+/*
+FUNÇÃO PRA PEGAR O VALOR DO SELECT
+<script>
+    function add() {
+        let armazena = [];
+        input = document.getElementById("ingrediente").value;
+        let lista = document.getElementById('lista');
+        armazena.push(input)
+        for (var i = 0; i < armazena.length; i++) {
+            let item = document.createElement('li');
+            item.appendChild(document.createTextNode(armazena[i]));
+            lista.appendChild(item);
+        }
+    }
+</script>
+
+
+*/
 
 if (isset($_POST["inclui"])) {
 	$error = "";
@@ -44,15 +62,21 @@ if (isset($_POST["inclui"])) {
 		echo "</select></td>\n"; 
 		echo "</tr>\n";
 		echo "<tr>\n";
-		echo "<td>Ingredientes</td>\n"; 
+		echo "<td>Ingrediente</td>\n"; 
 		echo "<td><select id=\"ingrediente\" name=\"ingrediente\">\n";
 		$results2 = $db->query(trim("select * from ingrediente "));
 		while ($row2 = $results2->fetchArray()) {
 		echo "<option value=\"".$row2["codigo"]."\">".$row2["nome"]."</option>\n";
 		}
 		echo "</select></td>\n";
+		echo "<td><input type=\"button\" id=\"botao\" name=\"botao\" value=\"+\" onclick=\"add();\"></td>\n"; 
+		echo "</tr>\n";
 
-		echo "<td><input type=\"button\" id=\"botao\" name=\"botao\" value=\"+\" onclick=\"add()\"></td>\n"; 
+		echo "<tr>\n";
+		echo "<td>Ingredientes</td>\n"; 
+		echo "<td><div id=\"lista\"></div></td>\n";
+		echo "</tr>\n";
+		
 		echo "</tr>\n";
 		echo "</table>\n";
 		echo "<input type=\"submit\" name=\"inclui\" value=\"inclui\">\n";
@@ -64,8 +88,12 @@ if (isset($_POST["inclui"])) {
 ?>
 </body>
 <?php
+
+
 if (isset($_POST["inclui"])) {
 	echo "<script>setTimeout(function () { window.open(\"pizzariaA.php\",\"_self\"); }, 3000);</script>";
 }
+
+
 ?>
 </html>
