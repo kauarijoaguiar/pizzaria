@@ -43,7 +43,7 @@ echo "<input type=\"text\" id=\"valor\" name=\"valor\" value=\"".$value."\" size
 $parameters = array();
 if (isset($_GET["orderby"])) $parameters[] = "orderby=".$_GET["orderby"];
 if (isset($_GET["offset"])) $parameters[] = "offset=".$_GET["offset"];
-echo "<a href=\"\" onclick=\"value = document.getElementById('valor').value.trim().replace(/ +/g, '+'); result = '".strtr(implode("&", $parameters), " ", "+")."'; result = ((value != '') ? document.getElementById('campo').value+'='+value+((result != '') ? '&' : '') : '')+result; this.href ='select.php'+((result != '') ? '?' : '')+result;\">&#x1F50E;</a><br>\n";
+echo "<a href=\"\" onclick=\"value = document.getElementById('valor').value.trim().replace(/ +/g, '+'); result = '".strtr(implode("&", $parameters), " ", "+")."'; result = ((value != '') ? document.getElementById('campo').value+'='+value+((result != '') ? '&' : '') : '')+result; this.href ='pizzariaD.php'+((result != '') ? '?' : '')+result;\">&#x1F50E;</a><br>\n";
 echo "<br>\n";
 
 echo "<table border=\"1\">\n";
@@ -70,23 +70,37 @@ $where = (count($where) > 0) ? "where ".implode(" and ", $where) : "";
 
 $total = $db->query("select count(*) as total from comanda ".$where)->fetchArray()["total"];
 
-$orderby = (isset($_GET["orderby"])) ? $_GET["orderby"] : "codigo asc";
+$orderby = (isset($_GET["orderby"])) ? $_GET["orderby"] : "numero asc";
 
 $offset = (isset($_GET["offset"])) ? max(0, min($_GET["offset"], $total-1)) : 0;
 $offset = $offset-($offset%$limit);
-/*
-$results = $db->query("select * from sabor ".$where." order by ".$orderby." limit ".$limit." offset ".$offset);
-while ($row = $results->fetchArray()) {
+
+$results = $db->query("select * from comanda".$where." order by ".$orderby." limit ".$limit." offset ".$offset);
+
+while ($row = $results->fetchArray()){
 	echo "<tr>\n";
-	echo "<td><a href=\"pizzariaF.php?codigo=".$row["codigo"]."\">&#x1F4DD;</a></td>\n";
-	echo "<td>".$row["codigo"]."</td>\n";
-	echo "<td>".$row["nome"]."</td>\n";
-	echo "<td>".$row["tipo"]."</td>\n";
-	echo "<td>".$row["ingrediente"]."</td>\n";
-	echo "<td><a href=\"delete.php?codigo=".$row["codigo"]."\" onclick=\"return(confirm('Excluir ".$row["nome"]."?'));\">&#x1F5D1;</a></td>\n";
+	echo "<td><a href=\"pizzariaC.php?numero=".$row["numero"]."\">&#x1F4DD;</a></td>\n";
+	echo "<td>".$row["numero"]."</td>\n";
+	echo "<td>".$row["data"]."</td>\n";
+	echo "<td>\n";
+	$results2 = $db->query("select mesa.nome as mesa from comanda join mesa on comanda.mesa = mesa.codigo where comanda.numero= ".$row["numero"]);
+	while ($row2 = $results2->fetchArray()){
+		echo $row2["mesa"];
+	}
+	echo "</td>\n";
+	echo "<td>\n";
+
+	$results3 = $db->query("select count(pizza) as pizza from pizza join comanda on pizza.comanda = comanda.numero join pizzasabor on pizza.codigo = pizzasabor.pizza join sabor on pizzasabor.sabor = sabor.codigo join tipo on sabor.tipo = tipo.codigo where comanda.numero= ".$row["numero"]);
+	while ($row3 = $results3->fetchArray()){
+		echo $row3["pizza"];
+	}
+	echo "</td>\n";
+	echo "<td>".$row["valor"]."</td>\n";
+	echo "<td>".$row["pago"].$row[""].$row[""]."</td>\n";
+	echo "<td><a href=\"delete.php?numero=".$row["numero"]."\" onclick=\"return(confirm('Excluir ".$row["numero"]."?'));\">&#x1F5D1;</a></td>\n";
 	echo "</tr>\n";
 }
-*/
+
 echo "</table>\n";
 echo "<br>\n";
 
@@ -98,4 +112,3 @@ $db->close();
 ?>
 </body>
 </html>
-
