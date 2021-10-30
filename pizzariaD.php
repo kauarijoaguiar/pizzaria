@@ -96,7 +96,7 @@ while ($row = $results->fetchArray()){
 	}
 	echo "</td>\n";
 	echo "<td>".$row["valor"]."</td>\n";
-	echo "<td>".$row["pago"].$row[""].$row[""]."</td>\n";
+	echo "<td>".$row["pago"]."</td>\n";
 	echo "<td><a href=\"delete.php?numero=".$row["numero"]."\" onclick=\"return(confirm('Excluir ".$row["numero"]."?'));\">&#x1F5D1;</a></td>\n";
 	echo "</tr>\n";
 }
