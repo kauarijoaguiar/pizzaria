@@ -45,42 +45,69 @@ if (isset($_POST["inclui"])) {
 }else
 {
 	$db = new SQLite3("pizzaria.db");
-
-		echo "<form name=\"insert\" action=\"pizzariaB.php\" method=\"post\">\n";
-		echo "<table>\n";
-		echo "<tr>\n";
-		echo "<td>Nome</td>\n";
-		echo "<td><input type=\"text\" name=\"nome\" value=\"\" size=\"50\"></td>\n";
-		echo "</tr>\n";
-		echo "<tr>\n";
-		echo "<td>Tipo</td>\n"; 
-		echo "<td><select id=\"tipo\" name=\"tipo\">\n";
-		$results = $db->query("select * from tipo");
-		while ($row = $results->fetchArray()){
-			echo "<option value=\"".$row["codigo"]."\">".$row["nome"]."</option>";
-		}
-		echo "</select></td>\n"; 
-		echo "</tr>\n";
-		echo "<tr>\n";
-		echo "<td>Ingrediente</td>\n"; 
-		echo "<td><select id=\"ingrediente\" name=\"ingrediente\">\n";
-		$results2 = $db->query(trim("select * from ingrediente "));
-		while ($row2 = $results2->fetchArray()) {
-		echo "<option value=\"".$row2["codigo"]."\">".$row2["nome"]."</option>\n";
-		}
-		echo "</select></td>\n";
-		echo "<td><input type=\"button\" id=\"botao\" name=\"botao\" value=\"+\" onclick=\"add();\"></td>\n"; 
-		echo "</tr>\n";
-
-		echo "<tr>\n";
-		echo "<td>Ingredientes</td>\n"; 
-		echo "<td><div id=\"lista\"></div></td>\n";
-		echo "</tr>\n";
-		
-		echo "</tr>\n";
-		echo "</table>\n";
-		echo "<input type=\"submit\" name=\"inclui\" value=\"inclui\">\n";
-		echo "</form>\n";
+echo '<form name="insert" action="">';
+echo '<table>';
+echo '<caption><h1>Incluir Sabor</h1></caption>';
+echo '<tbody>';
+echo '<tr>';
+echo '<td><label for="nome">Nome</label></td>';
+echo '<td><input type="text" name="nome" id="nome"></td>';
+echo '</tr>';
+echo '<tr>';
+echo '<td><label for="tipo">Tipo</label></td>';
+echo '<td><select name="tipo" id="tipo">';
+$results = $db->query("select * from tipo");
+while ($row = $results->fetchArray()){
+  echo "<option value=\"".$row["codigo"]."\">".$row["nome"]."</option>";
+}
+echo '</select></td>';
+echo '</tr>';
+echo '<tr>';
+echo '<td><label for="ingrediente">Ingrediente</label></td>';
+echo '<td>';
+echo '<select name="ingrediente" id="ingrediente">';
+$results2 = $db->query(trim("select * from ingrediente "));
+while ($row2 = $results2->fetchArray()) {
+  echo "<option value=\"".$row2["codigo"]."\">".$row2["nome"]."</option>\n";
+}
+echo '</select>';
+echo '<input name="adicionar" type="button" value="+" onclick="add()">';
+echo '</td>';
+echo '</tr>';
+echo '<tr>';
+echo '<td><label for="lista">Ingredientes</label></td>';
+echo '<td><table id="lista"></table></td>';
+echo '</tr>';
+echo '<tr>';
+echo '<td><input type="submit" value="Inclui"></td>';
+echo '</tr>';
+echo '</tbody>';
+echo '</table>';
+echo '</form>';
+echo '<script>';
+echo 'const armazena = [];';
+echo 'const select = document.insert.ingrediente;';
+echo 'function add() {';
+echo 'const value = select.options[select.selectedIndex].text;';
+echo 'if (armazena.indexOf(value) !== -1) {';
+echo 'return;';
+echo '} else {';
+echo 'armazena.push(value);';
+echo '}';
+echo 'lista(armazena);';
+echo '}';
+echo 'function del(that) {';
+echo 'const value = that.parentElement.previousElementSibling.innerHTML;';
+echo 'armazena.splice(armazena.indexOf(value), 1);';
+echo 'lista(armazena);';
+echo '}';
+echo 'function lista(list) {';
+echo 'const table = list.map(i => {';
+echo 'return `<tr><td>${i}</td><td><input type="button" value="-" onclick="del(this)"></td></tr>`';
+echo '});';
+echo 'return document.getElementById("lista").innerHTML = table.join("");';
+echo '}';
+echo '</script>';
 	}
 		//echo $db->changes()." coisa incluída(s)<br>\n";
 		//echo $db->lastInsertRowID()." é o código da última coisa incluída.\n";
