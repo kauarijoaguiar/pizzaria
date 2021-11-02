@@ -90,7 +90,7 @@ echo '</script>';
 			if ($error == "") {
 				$db = new SQLite3("pizzaria.db");
 				$db->exec("PRAGMA foreign_keys = ON");
-				$db->exec("update sabor set nome = '".$_POST["nome"]."', tipo = '".$_POST["tipo"]."' where codigo = ".$_POST["codigo"]);				
+				$db->exec("update sabor set nome = '".$_POST["nome"]."' where codigo = ".$_POST[$_GET["codigo"]]);				
 				echo $db->changes()." Sabor(es) alterado(s)";
 				$db->close();
 		}else {
