@@ -12,9 +12,8 @@ if (isset($_POST["Inclui"])) {
 	if ($error == "") {
 		$db = new SQLite3("pizzaria.db");
 		$db->exec("PRAGMA foreign_keys = ON");
-		//$contador = $db->query("select count(*) from sabor");
 		$db->exec("insert into sabor (nome, tipo) values ('".$_POST["nome"]."', '".$_POST["tipo"]."')");
-		//$db->exec("insert into saboringrediente (sabor, ingrediente) values ('".$_POST["codigo"]."','".$_POST["armazena"]."')");
+		//$db->exec("insert into saboringrediente (sabor,ingrediente) values ('".lastInsertRowID()."','".$_POST[]."')");
 		echo $db->changes()." Pizza(s) incluída(s)<br>\n";
 		echo $db->lastInsertRowID()." é o código da última Pizza incluída.\n";
 		$db->close();

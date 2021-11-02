@@ -29,21 +29,16 @@ FUNÇÃO PRA PEGAR O VALOR DO SELECT
 
 */
 
-if (isset($_POST["Alterar"])) {
-	$error = "";
-	if ($error == "") {
+if (isset($_GET["codigo"])) {
+
 		$db = new SQLite3("pizzaria.db");
 		$db->exec("PRAGMA foreign_keys = ON");
-		//$db->exec("insert into sabor (nome, tipo) values ('".$_POST["nome"]."', '".$_POST["tipo"]."')");
-		//$db->exec("insert into ingrediente (nome) values ('".$_POST["ingrediente"]."')");
-		//echo $db->changes()." Piazza(s) incluída(s)<br>\n";
-		//echo $db->lastInsertRowID()." é o código da última Pizza incluída.\n";
+		$sabor = $db->query("select * from sabor where codigo = ".$_GET["codigo"]);
+		$s = $results->fetchArray();
 		$db->close();
-	}else{
-		echo "<font color=\"red\">".$error."</font>";
-	}
-}else
-{
+		if($s === false){
+			echo "<font color=\"red\">Sabor não encontrada</font>";
+		}else{
 	$db = new SQLite3("pizzaria.db");
 echo '<form name="insert" action="pizzariaC.php" method="post">';
 echo '<table>';
@@ -112,6 +107,19 @@ echo 'return document.getElementById("lista").innerHTML = table.join("");';
 echo '}';
 echo '</script>';
 	}
+}else{
+		if(isset($_POST["Alterar"])){
+			$error = "";
+			if ($error == "") {
+				$db = new SQLite3("pizzaria.db");
+				$db->exec("PRAGMA foreign_keys = ON");
+
+				echo $db->changes()." Sabor(es) alterado(s)";
+		}else {
+			echo "<font color=\"red\">".$error."</font>";
+		}
+	}
+}
 		//echo $db->changes()." coisa incluída(s)<br>\n";
 		//echo $db->lastInsertRowID()." é o código da última coisa incluída.\n";
 
