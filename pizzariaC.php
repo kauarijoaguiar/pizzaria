@@ -6,35 +6,12 @@
 .mode column
 PRAGMA foreign_keys = ON;
 */
-/*
-OBS: QUANDO EU COLOCO ESSA LINHA "$db = new SQLite3("pizzaria.db");" DENTRO DO ELSE
-OS SELECTS FUNCIONAM MAS SE EU COLOCO FORA, DENTRO DO SEGUNDO IF, ELE PARA
-*/
-/*
-FUNÇÃO PRA PEGAR O VALOR DO SELECT
-<script>
-    function add() {
-        let armazena = [];
-        input = document.getElementById("ingrediente").value;
-        let lista = document.getElementById('lista');
-        armazena.push(input)
-        for (var i = 0; i < armazena.length; i++) {
-            let item = document.createElement('li');
-            item.appendChild(document.createTextNode(armazena[i]));
-            lista.appendChild(item);
-        }
-    }
-</script>
-
-
-*/
 
 if (isset($_GET["codigo"])) {
-
 		$db = new SQLite3("pizzaria.db");
 		$db->exec("PRAGMA foreign_keys = ON");
 		$sabor = $db->query("select * from sabor where codigo = ".$_GET["codigo"]);
-		$s = $results->fetchArray();
+		$s = $sabor->fetchArray();
 		$db->close();
 		if($s === false){
 			echo "<font color=\"red\">Sabor não encontrada</font>";
@@ -113,8 +90,9 @@ echo '</script>';
 			if ($error == "") {
 				$db = new SQLite3("pizzaria.db");
 				$db->exec("PRAGMA foreign_keys = ON");
-
+				$db->exec("update sabor set nome = '".$_POST["nome"]."' where codigo = ".$_POST[$_GET["codigo"]]);				
 				echo $db->changes()." Sabor(es) alterado(s)";
+				$db->close();
 		}else {
 			echo "<font color=\"red\">".$error."</font>";
 		}
@@ -132,3 +110,8 @@ if (isset($_POST["Alterar"])) {
 }
 ?>
 </html>
+
+
+UPDATE sabor
+SET nome = "bunda";
+WHERE condition;
