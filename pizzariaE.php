@@ -1,0 +1,66 @@
+<html>
+<body>
+<?php
+
+if (isset($_POST["Inclui"])) {
+	$error = "";
+	if ($error == "") {
+		$db = new SQLite3("pizzaria.db");
+		$db->exec("PRAGMA foreign_keys = ON");
+		$db->exec("insert into comanda (numero, data, mesa, pago) values ('".$_POST["Numero"]."', DATE('now'), 1, false");
+		echo $db->changes()." Comanda de código'.$db->lastInsertRowID().' incluída!<br>\n";
+		$db->close();
+	}else{
+		echo "<font color=\"red\">".$error."</font>";
+	}
+}
+else {
+	    $db = new SQLite3("pizzaria.db");
+        $proximoNumero = $db->query("SELECT NUMERO+1 AS PROXIMO FROM COMANDA ORDER BY NUMERO DESC LIMIT 1")->fetchArray() ;
+        $mesas = $db->query("SELECT * FROM MESA");
+        setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
+        echo '<form name="insert" action="pizzariaE.php" method="post">';
+        echo '<table>';
+        echo '<caption><h1>Incluir Comanda</h1></caption>';
+        echo '<tbody>';
+
+        echo '<tr>';
+        echo '<td><label for="Numero">Número</label></td>';
+        echo '<td>'.$proximoNumero['PROXIMO'].'</td>';
+        echo '</tr>';
+
+        echo '<tr>';
+        echo '<td><label for="Data">Data</label></td>';
+        echo '<td>'.ucfirst(strftime('%a %d/%m/%y', strtotime('today'))).'</td>';
+        echo '</tr>';
+
+        echo '<tr>';
+        echo '<td><label for="Mesa">Mesa</label></td>';
+        echo '<td><select name="mesa" id="mesa">';
+        while ($linhaMesa = $mesas->fetchArray()){
+            echo "<option value=\"".$linhaMesa["codigo"]."\">".$linhaMesa["nome"]."</option>";
+        }
+        echo '</select></td>';
+        echo '</tr>';
+        
+        echo '<tr>';
+        echo '<td><input type="submit" name="Inclui" value="Inclui"></td>';
+        echo '</tr>';
+
+        echo '</tbody>';
+        echo '</table>';
+        echo '</form>';
+	}
+
+?>
+</body>
+<?php
+
+
+if (isset($_POST["Inclui"])) {
+	echo "<script>setTimeout(function () { window.open(\"pizzariaD.php\",\"_self\"); }, 3000);</script>";
+}
+
+
+?>
+</html>

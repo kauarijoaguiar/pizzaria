@@ -20,7 +20,7 @@ $db->exec("PRAGMA foreign_keys = ON");
 
 $limit = 5;
 
-echo "<h1>Cadastro de pessoas</h1>\n";
+echo "<h1>Cadastro de Comandas</h1>\n";
 
 echo "<select id=\"campo\" name=\"campo\">\n";
 echo "<option value=\"numero\"".((isset($_GET["numero"])) ? " selected" : "").">Numero</option>\n";
