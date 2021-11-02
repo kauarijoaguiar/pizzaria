@@ -6,28 +6,6 @@
 .mode column
 PRAGMA foreign_keys = ON;
 */
-/*
-OBS: QUANDO EU COLOCO ESSA LINHA "$db = new SQLite3("pizzaria.db");" DENTRO DO ELSE
-OS SELECTS FUNCIONAM MAS SE EU COLOCO FORA, DENTRO DO SEGUNDO IF, ELE PARA
-*/
-/*
-FUNÇÃO PRA PEGAR O VALOR DO SELECT
-<script>
-    function add() {
-        let armazena = [];
-        input = document.getElementById("ingrediente").value;
-        let lista = document.getElementById('lista');
-        armazena.push(input)
-        for (var i = 0; i < armazena.length; i++) {
-            let item = document.createElement('li');
-            item.appendChild(document.createTextNode(armazena[i]));
-            lista.appendChild(item);
-        }
-    }
-</script>
-
-
-*/
 
 if (isset($_POST["Inclui"])) {
 	$error = "";
@@ -110,8 +88,6 @@ echo 'return document.getElementById("lista").innerHTML = table.join("");';
 echo '}';
 echo '</script>';
 	}
-		//echo $db->changes()." coisa incluída(s)<br>\n";
-		//echo $db->lastInsertRowID()." é o código da última coisa incluída.\n";
 
 ?>
 </body>
