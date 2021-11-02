@@ -50,8 +50,11 @@ echo '<table>';
 echo '<caption><h1>Alterar Sabor</h1></caption>';
 echo '<tbody>';
 echo '<tr>';
+$nome = $db->query("select sabor.nome as nome from sabor where codigo = ".$_GET["codigo"]);
+while ($n = $nome->fetchArray()){
 echo '<td><label for="nome">Nome</label></td>';
-echo '<td><input type="text" name="nome" id="nome"></td>';
+echo "<td><input type=\"text\" name=\"nome\" id=\"nome\" value=\"".$n["nome"]."\"></td>";
+}
 echo '</tr>';
 echo '<tr>';
 echo '<td><label for="tipo">Tipo</label></td>';

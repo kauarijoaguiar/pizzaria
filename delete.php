@@ -5,7 +5,7 @@ if (isset($_GET["codigo"])) {
 	$db = new SQLite3("pizzaria.db");
 	$db->exec("PRAGMA foreign_keys = ON");
 	$db->exec("delete from sabor where sabor.codigo = ".$_GET["codigo"]);
-	echo $db->changes()." pessoa(s) excluída(s)";
+	echo $db->changes()." Pizza(s) excluída(s)";
 	$db->close();
 }
 ?>

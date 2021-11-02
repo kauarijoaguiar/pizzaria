@@ -70,7 +70,7 @@ $results = $db->query("select * from sabor".$where." order by ".$orderby." limit
 
 while ($row = $results->fetchArray()){
 	echo "<tr>\n";
-	echo "<td><a href=\"pizzariaC.php?codigo=".$row["nome"]."\">&#x1F4DD;</a></td>\n";
+	echo "<td><a href=\"pizzariaC.php?codigo=".$row["codigo"]."\">&#x1F4DD;</a></td>\n";
 	echo "<td>".$row["nome"]."</td>\n";
 	echo "<td>\n";
 $results2 = $db->query("select tipo.nome as tipo from sabor join tipo on sabor.tipo = tipo.codigo where sabor.codigo= ".$row["codigo"]);
@@ -83,7 +83,7 @@ while ($row3 = $results3->fetchArray()){
 	echo $row3["ingrediente"].",";
 }
 	echo "</td>\n";
-	echo "<td><a href=\"delete.php?codigo=".$row["nome"]."\" onclick=\"return(confirm('Excluir ".$row["nome"]."?'));\">&#x1F5D1;</a></td>\n";
+	echo "<td><a href=\"delete.php?codigo=".$row["codigo"]."\" onclick=\"return(confirm('Excluir ".$row["nome"]."?'));\">&#x1F5D1;</a></td>\n";
 	echo "</tr>\n";
 }
 
