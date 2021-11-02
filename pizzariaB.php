@@ -29,15 +29,15 @@ FUNÇÃO PRA PEGAR O VALOR DO SELECT
 
 */
 
-if (isset($_POST["inclui"])) {
+if (isset($_POST["Inclui"])) {
 	$error = "";
 	if ($error == "") {
 		$db = new SQLite3("pizzaria.db");
 		$db->exec("PRAGMA foreign_keys = ON");
 		//$db->exec("insert into sabor (nome, tipo) values ('".$_POST["nome"]."', '".$_POST["tipo"]."')");
 		//$db->exec("insert into ingrediente (nome) values ('".$_POST["ingrediente"]."')");
-		//echo $db->changes()." pessoa(s) incluída(s)<br>\n";
-		//echo $db->lastInsertRowID()." é o código da última pessoa incluída.\n";
+		//echo $db->changes()." Pizza(s) incluída(s)<br>\n";
+		//echo $db->lastInsertRowID()." é o código da última Pizza incluída.\n";
 		$db->close();
 	}else{
 		echo "<font color=\"red\">".$error."</font>";
@@ -45,7 +45,7 @@ if (isset($_POST["inclui"])) {
 }else
 {
 	$db = new SQLite3("pizzaria.db");
-echo '<form name="insert" action="">';
+echo '<form name="insert" action="pizzariaB.php" method="post">';
 echo '<table>';
 echo '<caption><h1>Incluir Sabor</h1></caption>';
 echo '<tbody>';
@@ -79,7 +79,7 @@ echo '<td><label for="lista">Ingredientes</label></td>';
 echo '<td><table id="lista"></table></td>';
 echo '</tr>';
 echo '<tr>';
-echo '<td><input type="submit" value="Inclui"></td>';
+echo '<td><input type="submit" name="Inclui" value="Inclui"></td>';
 echo '</tr>';
 echo '</tbody>';
 echo '</table>';
@@ -117,7 +117,7 @@ echo '</script>';
 <?php
 
 
-if (isset($_POST["inclui"])) {
+if (isset($_POST["Inclui"])) {
 	echo "<script>setTimeout(function () { window.open(\"pizzariaA.php\",\"_self\"); }, 3000);</script>";
 }
 
