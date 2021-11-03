@@ -82,7 +82,7 @@ $results = $db->query("select * from comanda".$where." order by ".$orderby." lim
 
 while ($row = $results->fetchArray()){
 	echo "<tr>\n";
-	echo '<td>'.($row["pago"] > 0 ? '' : '<a href=\"pizzariaC.php?numero=".$row["numero"]."\">&#x1F4DD;</a>').'</td>\n';
+	echo '<td>'.($row["pago"] > 0 ? '' : "<a href=\"pizzariaF.php?numero=".$row["numero"]."\">&#x1F4DD;</a>").'</td>\n';
 	echo "<td>".$row["numero"]."</td>\n";
 	echo "<td>".$row["data"]."</td>\n";
 	echo "<td>\n";
@@ -98,7 +98,18 @@ while ($row = $results->fetchArray()){
 		echo $row3["pizza"];
 	}
 	echo "</td>\n";
-	echo "<td>".$row["valor"]."</td>\n";
+	echo "<td>\n";
+	$results4 = $db->query("select max(case when borda.preco is null then 0 else borda.preco end + precoportamanho.preco) as valor from comanda
+	join pizza on pizza.comanda = comanda.numero
+	join pizzasabor on pizzasabor.pizza = pizza.codigo
+	join sabor on pizzasabor.sabor = sabor.codigo
+	join precoportamanho on precoportamanho.tipo = sabor.tipo and precoportamanho.tamanho = pizza.tamanho
+	left join borda on pizza.borda = borda.codigo where comanda.numero = ".$row["numero"]);
+	while ($row4 = $results4->fetchArray()){
+	echo "R$ ".$row4["valor"];
+	}
+	echo "</td>\n";
+
 	echo "<td>".($row["pago"] > 0 ? 'Sim':'Não')."</td>\n";
 	echo "<td><a href=\"delete.php?numero=".$row["numero"]."\" onclick=\"return(confirm('Excluir ".$row["numero"]."?'));\">&#x1F5D1;</a></td>\n";
 	echo "</tr>\n";
