@@ -1,4 +1,7 @@
 <html>
+<head>
+<title>Cadastro de Comandas</title>
+</head>
 <body>
 <?php
 function url($campo, $valor) {
@@ -23,10 +26,10 @@ $limit = 5;
 echo "<h1>Cadastro de Comandas</h1>\n";
 
 echo "<select id=\"campo\" name=\"campo\">\n";
-echo "<option value=\"numero\"".((isset($_GET["numero"])) ? " selected" : "").">Numero</option>\n";
+echo "<option value=\"numero\"".((isset($_GET["numero"])) ? " selected" : "").">Número</option>\n";
 echo "<option value=\"data\"".((isset($_GET["data"])) ? " selected" : "").">Data</option>\n";
 echo "<option value=\"mesa\"".((isset($_GET["mesa"])) ? " selected" : "").">Mesa</option>\n";
-echo "<option value=\"pizza\"".((isset($_GET["pizza"])) ? " selected" : "").">Pizza</option>\n";
+echo "<option value=\"pizza\"".((isset($_GET["pizza"])) ? " selected" : "").">Pizzas</option>\n";
 echo "<option value=\"valor\"".((isset($_GET["valor"])) ? " selected" : "").">Valor</option>\n";
 echo "<option value=\"pago\"".((isset($_GET["pago"])) ? " selected" : "").">Pago</option>\n";
 echo "</select>\n"; 
@@ -49,12 +52,12 @@ echo "<br>\n";
 echo "<table border=\"1\">\n";
 echo "<tr>\n";
 echo "<td><a href=\"pizzariaE.php\">&#x1F4C4;</a></td>\n";
-echo "<td><b>numero</b> <a href=\"".url("orderby", "numero+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "numero+desc")."\">&#x25B4;</a></td>\n";
-echo "<td><b>data</b> <a href=\"".url("orderby", "data+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "data+desc")."\">&#x25B4;</a></td>\n";
-echo "<td><b>mesa</b> <a href=\"".url("orderby", "mesa+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "mesa+desc")."\">&#x25B4;</a></td>\n";
-echo "<td><b>pizza</b> <a href=\"".url("orderby", "pizza+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "pizza+desc")."\">&#x25B4;</a></td>\n";
-echo "<td><b>valor</b> <a href=\"".url("orderby", "valor+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "valor+desc")."\">&#x25B4;</a></td>\n";
-echo "<td><b>pago</b> <a href=\"".url("orderby", "pago+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "pago+desc")."\">&#x25B4;</a></td>\n";
+echo "<td><b>Número</b> <a href=\"".url("orderby", "numero+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "numero+desc")."\">&#x25B4;</a></td>\n";
+echo "<td><b>Data</b> <a href=\"".url("orderby", "data+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "data+desc")."\">&#x25B4;</a></td>\n";
+echo "<td><b>Mesa</b> <a href=\"".url("orderby", "mesa+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "mesa+desc")."\">&#x25B4;</a></td>\n";
+echo "<td><b>Pizzas</b> <a href=\"".url("orderby", "pizza+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "pizza+desc")."\">&#x25B4;</a></td>\n";
+echo "<td><b>Valor</b> <a href=\"".url("orderby", "valor+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "valor+desc")."\">&#x25B4;</a></td>\n";
+echo "<td><b>Pago</b> <a href=\"".url("orderby", "pago+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "pago+desc")."\">&#x25B4;</a></td>\n";
 echo "<td></td>\n";
 echo "</tr>\n";
 
@@ -79,7 +82,7 @@ $results = $db->query("select * from comanda".$where." order by ".$orderby." lim
 
 while ($row = $results->fetchArray()){
 	echo "<tr>\n";
-	echo "<td><a href=\"pizzariaC.php?numero=".$row["numero"]."\">&#x1F4DD;</a></td>\n";
+	echo '<td>'.($row["pago"] > 0 ? '' : '<a href=\"pizzariaC.php?numero=".$row["numero"]."\">&#x1F4DD;</a>').'</td>\n';
 	echo "<td>".$row["numero"]."</td>\n";
 	echo "<td>".$row["data"]."</td>\n";
 	echo "<td>\n";
@@ -96,7 +99,7 @@ while ($row = $results->fetchArray()){
 	}
 	echo "</td>\n";
 	echo "<td>".$row["valor"]."</td>\n";
-	echo "<td>".$row["pago"]."</td>\n";
+	echo "<td>".($row["pago"] > 0 ? 'Sim':'Não')."</td>\n";
 	echo "<td><a href=\"delete.php?numero=".$row["numero"]."\" onclick=\"return(confirm('Excluir ".$row["numero"]."?'));\">&#x1F5D1;</a></td>\n";
 	echo "</tr>\n";
 }

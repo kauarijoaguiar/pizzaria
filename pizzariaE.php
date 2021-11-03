@@ -1,4 +1,5 @@
 <html>
+<title>Cadastro de Comandas</title>
 <body>
 <?php
 
@@ -6,9 +7,9 @@ if (isset($_POST["Inclui"])) {
 	$error = "";
 	if ($error == "") {
 		$db = new SQLite3("pizzaria.db");
-		$db->exec("PRAGMA foreign_keys = ON");
-		$db->exec("insert into comanda (numero, data, mesa, pago) values ('".$_POST["Numero"]."', DATE('now'), 1, false");
-		echo $db->changes()." Comanda de código'.$db->lastInsertRowID().' incluída!<br>\n";
+		$db->exec('PRAGMA foreign_keys = ON');
+		$db->exec("insert into comanda (numero, data, mesa, pago) values (".$_POST['Numero'].", DATE('now'), ".$_POST['mesa'].", false)");
+		echo "Comanda de número ".$_POST['Numero']." incluída!<br>\n";
 		$db->close();
 	}else{
 		echo "<font color=\"red\">".$error."</font>";
@@ -19,14 +20,14 @@ else {
         $proximoNumero = $db->query("SELECT NUMERO+1 AS PROXIMO FROM COMANDA ORDER BY NUMERO DESC LIMIT 1")->fetchArray() ;
         $mesas = $db->query("SELECT * FROM MESA");
         setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
-        echo '<form name="insert" action="pizzariaE.php" method="post">';
+        echo '<form name="insertComanda" action="pizzariaE.php" method="POST">';
         echo '<table>';
         echo '<caption><h1>Incluir Comanda</h1></caption>';
         echo '<tbody>';
 
         echo '<tr>';
-        echo '<td><label for="Numero">Número</label></td>';
-        echo '<td>'.$proximoNumero['PROXIMO'].'</td>';
+        echo '<td><label for="Numero">Numero</label></td>';
+        echo '<td><input type="text" style="border:none; background-color: transparent; font-size: 15px"  name="Numero" id="Numero" value="'.$proximoNumero['PROXIMO'].'"></td>';
         echo '</tr>';
 
         echo '<tr>';
