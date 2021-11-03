@@ -47,19 +47,19 @@ $parameters = array();
 if (isset($_GET["orderby"])) $parameters[] = "orderby=".$_GET["orderby"];
 if (isset($_GET["offset"])) $parameters[] = "offset=".$_GET["offset"];
 echo "<a href=\"\" onclick=\"value = document.getElementById('valor').value.trim().replace(/ +/g, '+'); result = '".strtr(implode("&", $parameters), " ", "+")."'; result = ((value != '') ? document.getElementById('campo').value+'='+value+((result != '') ? '&' : '') : '')+result; this.href ='pizzariaD.php'+((result != '') ? '?' : '')+result;\">&#x1F50E;</a><br>\n";
-echo "<br>\n";
+echo "<br>";
 
-echo "<table border=\"1\">\n";
-echo "<tr>\n";
-echo "<td><a href=\"pizzariaE.php\">&#x1F4C4;</a></td>\n";
-echo "<td><b>Número</b> <a href=\"".url("orderby", "numero+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "numero+desc")."\">&#x25B4;</a></td>\n";
-echo "<td><b>Data</b> <a href=\"".url("orderby", "data+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "data+desc")."\">&#x25B4;</a></td>\n";
-echo "<td><b>Mesa</b> <a href=\"".url("orderby", "mesa+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "mesa+desc")."\">&#x25B4;</a></td>\n";
-echo "<td><b>Pizzas</b> <a href=\"".url("orderby", "pizza+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "pizza+desc")."\">&#x25B4;</a></td>\n";
-echo "<td><b>Valor</b> <a href=\"".url("orderby", "valor+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "valor+desc")."\">&#x25B4;</a></td>\n";
-echo "<td><b>Pago</b> <a href=\"".url("orderby", "pago+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "pago+desc")."\">&#x25B4;</a></td>\n";
-echo "<td></td>\n";
-echo "</tr>\n";
+echo "<table border=\"1\">";
+echo "<tr>";
+echo "<td><a href=\"pizzariaE.php\">&#x1F4C4;</a></td>";
+echo "<td><b>Número</b> <a href=\"".url("orderby", "numero+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "numero+desc")."\">&#x25B4;</a></td>";
+echo "<td><b>Data</b> <a href=\"".url("orderby", "data+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "data+desc")."\">&#x25B4;</a></td>";
+echo "<td><b>Mesa</b> <a href=\"".url("orderby", "mesa+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "mesa+desc")."\">&#x25B4;</a></td>";
+echo "<td colspan=2><b>Pizzas</b> <a href=\"".url("orderby", "pizza+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "pizza+desc")."\">&#x25B4;</a></td>";
+echo "<td><b>Valor</b> <a href=\"".url("orderby", "valor+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "valor+desc")."\">&#x25B4;</a></td>";
+echo "<td><b>Pago</b> <a href=\"".url("orderby", "pago+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "pago+desc")."\">&#x25B4;</a></td>";
+echo "<td></td>";
+echo "</tr>";
 
 $where = array();
 if (isset($_GET["numero"])) $where[] = "numero like '%".strtr($_GET["numero"], " ", "%")."%'";
@@ -81,24 +81,27 @@ $offset = $offset-($offset%$limit);
 $results = $db->query("select * from comanda".$where." order by ".$orderby." limit ".$limit." offset ".$offset);
 
 while ($row = $results->fetchArray()){
-	echo "<tr>\n";
-	echo '<td>'.($row["pago"] > 0 ? '' : "<a href=\"pizzariaF.php?numero=".$row["numero"]."\">&#x1F4DD;</a>").'</td>\n';
-	echo "<td>".$row["numero"]."</td>\n";
-	echo "<td>".$row["data"]."</td>\n";
-	echo "<td>\n";
+	echo "<tr>";
+	echo '<td>'.($row["pago"] > 0 ? '' : "<a href=\"pizzariaF.php?numero=".$row["numero"]."\">&#x1F4DD;</a>").'</td>';
+	echo "<td>".$row["numero"]."</td>";
+	echo "<td>".$row["data"]."</td>";
+	echo "<td>";
 	$results2 = $db->query("select mesa.nome as mesa from comanda join mesa on comanda.mesa = mesa.codigo where comanda.numero= ".$row["numero"]);
 	while ($row2 = $results2->fetchArray()){
 		echo $row2["mesa"];
 	}
-	echo "</td>\n";
-	echo "<td>\n";
+	echo "</td>";
+	echo "<td>";
 
 	$results3 = $db->query("select count(pizza) as pizza from pizza join comanda on pizza.comanda = comanda.numero join pizzasabor on pizza.codigo = pizzasabor.pizza join sabor on pizzasabor.sabor = sabor.codigo join tipo on sabor.tipo = tipo.codigo where comanda.numero= ".$row["numero"]);
 	while ($row3 = $results3->fetchArray()){
 		echo $row3["pizza"];
 	}
-	echo "</td>\n";
+	echo "</td>";
+	echo '<td>&#128064</td>';
+
 	echo "<td>\n";
+	
 	$results4 = $db->query("select max(case when borda.preco is null then 0 else borda.preco end + precoportamanho.preco) as valor from comanda
 	join pizza on pizza.comanda = comanda.numero
 	join pizzasabor on pizzasabor.pizza = pizza.codigo
@@ -106,7 +109,7 @@ while ($row = $results->fetchArray()){
 	join precoportamanho on precoportamanho.tipo = sabor.tipo and precoportamanho.tamanho = pizza.tamanho
 	left join borda on pizza.borda = borda.codigo where comanda.numero = ".$row["numero"]);
 	while ($row4 = $results4->fetchArray()){
-	echo "R$ ".$row4["valor"];
+	echo "R$ ".($row4["valor"] == "" ? "0,0" : (str_replace(".",",",$row4["valor"])));
 	}
 	echo "</td>\n";
 
