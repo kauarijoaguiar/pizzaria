@@ -26,11 +26,11 @@ else {
     echo '<tbody>';
     echo '<tr>';
     echo '<td><label for="numero">Numero</label></td>';
-    echo '<td><input type="number" name="numero" id="numero" value="'.$numero["numero"].'" readonly></td>';
+    echo '<td><input type="number" style="border:none; background-color: transparent; font-size: 15px" name="numero" id="numero" value="'.$numero["numero"].'" readonly></td>';
     echo '</tr>';
     echo '<tr>';
     echo '<td><label for="data">Data</label></td>';
-    echo '<td><input type="text" name="data" id="data" readonly value="'.ucfirst(strftime('%a %d/%m/%y', strtotime('today'))).'"></td>';
+    echo '<td><input type="text" name="data" id="data" readonly style="border:none; background-color: transparent; font-size: 15px" value="'.ucfirst(strftime('%a %d/%m/%y', strtotime('today'))).'"></td>';
     echo '</tr>';
     echo '<tr>';
     echo '<td><label for="tamanho">Tamanho</label></td>';

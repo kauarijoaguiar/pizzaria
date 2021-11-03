@@ -27,7 +27,7 @@ else {
 
         echo '<tr>';
         echo '<td><label for="Numero">Numero</label></td>';
-        echo '<td><input type="text" style="border:none; background-color: transparent; font-size: 15px"  name="Numero" id="Numero" value="'.$proximoNumero['PROXIMO'].'"></td>';
+        echo '<td><input type="text" style="border:none; background-color: transparent; font-size: 15px"  name="Numero" id="Numero" readonly value="'.$proximoNumero['PROXIMO'].'"></td>';
         echo '</tr>';
 
         echo '<tr>';
