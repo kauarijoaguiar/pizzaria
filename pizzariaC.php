@@ -110,8 +110,3 @@ if (isset($_POST["Alterar"])) {
 }
 ?>
 </html>
-
-
-UPDATE sabor
-SET nome = "bunda";
-WHERE condition;
