@@ -101,7 +101,7 @@ while ($row = $results->fetchArray()){
 		echo "<td>";
 		echo $row3["pizza"];
 		echo "</td>";
-		echo '<td>'.($row3["pizza"] > 0 ? '<a href=\"pizzariaG.php?numero='.$row["numero"].'\">&#128064;</a>' : '').'</td>';
+		echo '<td>'.($row3["pizza"] > 0 ? "<a href=\"pizzariaG.php?numero=".$row["numero"]."\">&#128064;</a>" : '').'</td>';
 	}
 	echo "<td>\n";
 	
