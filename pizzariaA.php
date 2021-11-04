@@ -1,4 +1,10 @@
 <html>
+<head>
+<title>Cadastro de Sabores</title>
+<style>
+	a { text-decoration: none;}
+</style>
+</head>
 <body>
 <?php
 /*

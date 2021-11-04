@@ -1,6 +1,10 @@
 <html>
 <head>
 <title>Cadastro de Comandas</title>
+<style>
+	a { text-decoration: none;}
+	.paginacao { font-size: 50% }
+</style>
 </head>
 <body>
 <?php
@@ -97,7 +101,7 @@ while ($row = $results->fetchArray()){
 		echo "<td>";
 		echo $row3["pizza"];
 		echo "</td>";
-		echo '<td>'.($row3["pizza"] > 0 ? '&#128064;' : '').'</td>';
+		echo '<td>'.($row3["pizza"] > 0 ? '<a href=\"pizzariaG.php?numero='.$row["numero"].'\">&#128064;</a>' : '').'</td>';
 	}
 	echo "<td>\n";
 	
@@ -115,8 +119,8 @@ while ($row = $results->fetchArray()){
 	
 	echo "<td>".($row["pago"] > 0 ? 'Sim':'Não')."</td>\n";
 	while ($row3 = $results3->fetchArray()){
-		echo "<td>".($row["pago"] == 0 &&$row3["pizza"] > 0 ? '&#128181;' : '')."</td>";
-		echo "<td>".($row["pago"] == 0 && $row3["pizza"] > 0 ? '&#128179;' : '')."</td>";
+		echo "<td>".($row["pago"] == 0 &&$row3["pizza"] > 0 ?  "<a href=\"pagarComanda.php?numero=".$row["numero"]."\">&#128181;</a>" : '')."</td>";
+		echo "<td>".($row["pago"] == 0 &&$row3["pizza"] > 0 ?  "<a href=\"pagarComanda.php?numero=".$row["numero"]."\">&#128179;</a>" : '')."</td>";
 		echo '<td>'.($row3["pizza"] == 0 ? "<a href=\"deleteComanda.php?numero=".$row["numero"]."\" onclick=\"return(confirm('Excluir comanda de número ".$row["numero"]."?'));\">&#x1F5D1;</a>" : '').'</td>';
 	}
 	echo "</tr>\n";
@@ -127,7 +131,7 @@ echo "</table>\n";
 echo "<br>\n";
 
 for ($page = 0; $page < ceil($total/$limit); $page++) {
-	echo (($offset == $page*$limit) ? ($page+1) : "<a href=\"".url("offset", $page*$limit)."\">".($page+1)."</a>")." \n";
+	echo "<span  class=\"paginacao\">".(($offset == $page*$limit) ? ($page+1) : "<a href=\"".url("offset", $page*$limit)."\">".($page+1)."</a>")."</span> ";
 }
 
 $db->close();

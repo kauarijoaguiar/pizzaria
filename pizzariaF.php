@@ -8,7 +8,7 @@ if (isset($_POST["Inclui"])) {
 	if ($error == "") {
 		$db = new SQLite3("pizzaria.db");
 		$db->exec('PRAGMA foreign_keys = ON');
-		$db->exec("insert into comanda (numero, data, mesa, pago) values (".$_POST['Numero'].", DATE('now'), ".$_POST['mesa'].", false)");
+		$db->exec("insert into comanda (numero, data, mesa, pago) values (".$_POST['Numero'].", DATE('now', 'localtime'), ".$_POST['mesa'].", false)");
 		echo "Pizza incluída na comanda ".$_POST['numero']."!<br>\n";
 		$db->close();
 	}else{
@@ -21,6 +21,7 @@ else {
     $tamanho = $db->query("select tamanho.nome as tamanho from tamanho");
     $bordas = $db->query("select codigo, nome from borda");
     setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
+    date_default_timezone_set('America/Sao_Paulo');
     echo '<form name="insertPizzaNaComanda" action="pizzariaF.php" method="POST">';
     echo '<table>';
     echo '<caption style="text-align: left;"><h1>Inclusão de Pizza</h1></caption>';

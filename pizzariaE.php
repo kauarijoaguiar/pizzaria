@@ -8,7 +8,7 @@ if (isset($_POST["Inclui"])) {
 	if ($error == "") {
 		$db = new SQLite3("pizzaria.db");
 		$db->exec('PRAGMA foreign_keys = ON');
-		$db->exec("insert into comanda (numero, data, mesa, pago) values (".$_POST['Numero'].", DATE('now'), ".$_POST['mesa'].", false)");
+		$db->exec("insert into comanda (numero, data, mesa, pago) values (".$_POST['Numero'].", DATE('now', 'localtime'), ".$_POST['mesa'].", false)");
 		echo "Comanda de número ".$_POST['Numero']." incluída!<br>\n";
 		$db->close();
 	}else{
@@ -20,6 +20,7 @@ else {
         $proximoNumero = $db->query("SELECT NUMERO+1 AS PROXIMO FROM COMANDA ORDER BY NUMERO DESC LIMIT 1")->fetchArray() ;
         $mesas = $db->query("SELECT * FROM MESA");
         setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
+        date_default_timezone_set('America/Sao_Paulo');
         echo '<form name="insertComanda" action="pizzariaE.php" method="POST">';
         echo '<table>';
         echo '<caption><h1>Incluir Comanda</h1></caption>';
