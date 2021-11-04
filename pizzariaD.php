@@ -57,7 +57,7 @@ echo "<td><b>Data</b> <a href=\"".url("orderby", "data+asc")."\">&#x25BE;</a> <a
 echo "<td><b>Mesa</b> <a href=\"".url("orderby", "mesa+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "mesa+desc")."\">&#x25B4;</a></td>";
 echo "<td colspan=2><b>Pizzas</b> <a href=\"".url("orderby", "pizza+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "pizza+desc")."\">&#x25B4;</a></td>";
 echo "<td><b>Valor</b> <a href=\"".url("orderby", "valor+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "valor+desc")."\">&#x25B4;</a></td>";
-echo "<td><b>Pago</b> <a href=\"".url("orderby", "pago+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "pago+desc")."\">&#x25B4;</a></td>";
+echo "<td colspan=3><b>Pago</b> <a href=\"".url("orderby", "pago+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "pago+desc")."\">&#x25B4;</a></td>";
 echo "<td></td>";
 echo "</tr>";
 
@@ -91,15 +91,14 @@ while ($row = $results->fetchArray()){
 		echo $row2["mesa"];
 	}
 	echo "</td>";
-	echo "<td>";
 
 	$results3 = $db->query("select count(pizza) as pizza from pizza join comanda on pizza.comanda = comanda.numero join pizzasabor on pizza.codigo = pizzasabor.pizza join sabor on pizzasabor.sabor = sabor.codigo join tipo on sabor.tipo = tipo.codigo where comanda.numero= ".$row["numero"]);
 	while ($row3 = $results3->fetchArray()){
+		echo "<td>";
 		echo $row3["pizza"];
+		echo "</td>";
+		echo '<td>'.($row3["pizza"] > 0 ? '&#128064;' : '').'</td>';
 	}
-	echo "</td>";
-	echo '<td>&#128064</td>';
-
 	echo "<td>\n";
 	
 	$results4 = $db->query("select max(case when borda.preco is null then 0 else borda.preco end + precoportamanho.preco) as valor from comanda
@@ -113,10 +112,16 @@ while ($row = $results->fetchArray()){
 	}
 	echo "</td>\n";
 
+	
 	echo "<td>".($row["pago"] > 0 ? 'Sim':'Não')."</td>\n";
-	echo "<td><a href=\"delete.php?numero=".$row["numero"]."\" onclick=\"return(confirm('Excluir ".$row["numero"]."?'));\">&#x1F5D1;</a></td>\n";
+	while ($row3 = $results3->fetchArray()){
+		echo "<td>".($row["pago"] == 0 &&$row3["pizza"] > 0 ? '&#128181;' : '')."</td>";
+		echo "<td>".($row["pago"] == 0 && $row3["pizza"] > 0 ? '&#128179;' : '')."</td>";
+		echo '<td>'.($row3["pizza"] == 0 ? "<a href=\"deleteComanda.php?numero=".$row["numero"]."\" onclick=\"return(confirm('Excluir comanda de número ".$row["numero"]."?'));\">&#x1F5D1;</a>" : '').'</td>';
+	}
 	echo "</tr>\n";
 }
+
 
 echo "</table>\n";
 echo "<br>\n";
