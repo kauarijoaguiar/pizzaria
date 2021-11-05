@@ -138,3 +138,18 @@ $db->close();
 ?>
 </body>
 </html>
+select sum(tmp.preco) as total
+from
+    (select
+        max(case
+                when borda.preco is null then 0
+                else borda.preco
+            end+precoportamanho.preco) as preco
+    from comanda
+        join pizza on pizza.comanda = comanda.numero
+        join pizzasabor on pizzasabor.pizza = pizza.codigo
+        join sabor on pizzasabor.sabor = sabor.codigo
+        join precoportamanho on precoportamanho.tipo = sabor.tipo and precoportamanho.tamanho = pizza.tamanho
+        left join borda on pizza.borda = borda.codigo
+    where comanda.numero = 1
+    group by pizza.codigo) as tmp;

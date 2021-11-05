@@ -53,20 +53,49 @@ echo "<td><b>Valor</b> <a href=\"".url("orderby", "valor+asc")."\">&#x25BE;</a> 
 echo "<td></td>\n";
 echo "</tr>\n";
 
-$where = array();
-if (isset($_GET["nome"])) $where[] = "nome like '%".strtr($_GET["nome"], " ", "%")."%'";
-if (isset($_GET["tipo"])) $where[] = "tipo = '".$_GET["tipo"]."'";
-if (isset($_GET["ingrediente"])) $where[] = "ingrediente = '".$_GET["ingrediente"]."'";
-$where = (count($where) > 0) ? "where ".implode(" and ", $where) : "";
 
-$total = $db->query("select count(*) as total from sabor ".$where)->fetchArray()["total"];
 
 $orderby = (isset($_GET["orderby"])) ? $_GET["orderby"] : "codigo asc";
 
 $offset = (isset($_GET["offset"])) ? max(0, min($_GET["offset"], $total-1)) : 0;
 $offset = $offset-($offset%$limit);
 
-$results = $db->query("select * from sabor".$where." order by ".$orderby." limit ".$limit." offset ".$offset);
+$results = $db->query(
+"select numero, pizza.codigo, group_concat(sabor.nome, ',') as sabor, sabor.codigo as codigo, case
+when pizza.borda is null then 'não'
+else borda.nome
+end as borda, max(case
+when borda.preco is null then 0
+else borda.preco
+end+precoportamanho.preco) || ' $' as valor, tamanho.nome as tamanho from comanda
+join pizza on pizza.comanda = comanda.numero
+join pizzasabor on pizza.codigo = pizzasabor.pizza
+join sabor on pizzasabor.sabor = sabor.codigo 
+join tipo on sabor.tipo = tipo.codigo
+join mesa on mesa.codigo = comanda.mesa
+join precoportamanho on precoportamanho.tipo = sabor.tipo and precoportamanho.tamanho = pizza.tamanho
+left join borda on pizza.borda = borda.codigo 
+join tamanho on pizza.tamanho = tamanho.codigo
+where comanda.numero = ".$_GET["numero"]." 
+group by pizza.codigo"." order by ".$orderby." limit ".$limit." offset ".$offset);
+while($row = $results->fetchArray()){
+	echo "<tr>";
+	echo "<td>";
+	echo $row["tamanho"];
+	echo "</td>";
+	echo "<td>";
+	echo $row["borda"];
+	echo "</td>";
+	echo "<td>";
+	echo $row["sabor"];
+	echo "</td>";
+	echo "<td>";
+	echo $row["valor"];
+	echo "</td>";
+	echo "</tr>\n";
+}
+
+
 
 echo "<td><b>Total</b></td>\n";
 echo "</table>\n";
