@@ -8,7 +8,8 @@ if (isset($_POST["Inclui"])) {
 	if ($error == "") {
 		$db = new SQLite3("pizzaria.db");
 		$db->exec('PRAGMA foreign_keys = ON');
-		$db->exec("insert into comanda (numero, data, mesa, pago) values (".$_POST['Numero'].", DATE('now', 'localtime'), ".$_POST['mesa'].", false)");
+		$db->exec("insert into pizza (comanda, tamanho, borda) values (".$_POST["numero"].",".$_POST['Tamanho'].",".$_POST['borda'].")");
+		$db->exec("insert into pizzasabor (comanda, tamanho, borda) values (".$_POST["numero"].",".$_POST['Tamanho'].",".$_POST['borda'].")");
 		echo "Pizza incluída na comanda ".$_POST['numero']."!<br>\n";
 		$db->close();
 	}else{
@@ -17,18 +18,18 @@ if (isset($_POST["Inclui"])) {
 }
 else {
     $db = new SQLite3("pizzaria.db");
-    $numero = $db->query("select comanda.numero as numero from comanda where numero = ".$_GET["numero"])->fetchArray() ;
+    $numero = $_GET["numero"];
     $tamanho = $db->query("select tamanho.nome as tamanho from tamanho");
     $bordas = $db->query("select codigo, nome from borda");
     setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
     date_default_timezone_set('America/Sao_Paulo');
-    echo '<form name="insertPizzaNaComanda" action="pizzariaF.php" method="POST">';
+    echo '<form name="insertPizzaNaComanda" action="pizzariaF.php?numero='.$_GET["numero"].'" method="POST">';
     echo '<table>';
     echo '<caption style="text-align: left;"><h1>Inclusão de Pizza</h1></caption>';
     echo '<tbody>';
     echo '<tr>';
     echo '<td><label for="numero">Numero</label></td>';
-    echo '<td><input type="number" style="border:none; background-color: transparent; font-size: 15px" name="numero" id="numero" value="'.$numero["numero"].'" readonly></td>';
+    echo '<td><input type="number" style="border:none; background-color: transparent; font-size: 15px" name="numero" id="numero" value="'.$numero.'" readonly></td>';
     echo '</tr>';
     echo '<tr>';
     echo '<td><label for="data">Data</label></td>';
@@ -48,7 +49,7 @@ echo '<tr>';
 echo '<td><label for="borda">Borda</label></td>';
 echo '<td>';
 echo '<select name="borda" id="borda">';
-echo '<option value="nao">Não</option>';
+echo '<option value="null">Não</option>';
 while ($borda = $bordas->fetchArray()){
   echo "<option value=\"".$borda["codigo"]."\">".ucfirst(strtolower($borda["nome"]))."</option>";
 }
