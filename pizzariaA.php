@@ -1,22 +1,10 @@
 <html>
-<head>
-<title>Cadastro de Sabores</title>
-<style>
-	a { text-decoration: none;}
-</style>
-</head>
 <body>
 <?php
-/*
-	select ingrediente.nome as nomeingrediente from ingrediente
-	join saboringrediente on saboringrediente.ingrediente=ingrediente.codigo
-	join sabor on saboringrediente.sabor=sabor.codigo
-
-*/
 function url($campo, $valor) {
 	$result = array();
 	if (isset($_GET["nome"])) $result["nome"] = "nome=".$_GET["nome"];
-	if (isset($_GET["tipo"])) $result["tipo"] = "tipo=".$_GET["tipo"];
+    if (isset($_GET["tipo"])) $result["tipo"] = "tipo=".$_GET["tipo"];
 	if (isset($_GET["ingrediente"])) $result["ingrediente"] = "ingrediente=".$_GET["ingrediente"];
 	if (isset($_GET["orderby"])) $result["orderby"] = "orderby=".$_GET["orderby"];
 	if (isset($_GET["offset"])) $result["offset"] = "offset=".$_GET["offset"];
@@ -31,6 +19,7 @@ $limit = 5;
 
 echo "<h1>Cadastro de Sabores</h1>\n";
 
+
 echo "<select id=\"campo\" name=\"campo\">\n";
 echo "<option value=\"nome\"".((isset($_GET["nome"])) ? " selected" : "").">Sabor</option>\n";
 echo "<option value=\"tipo\"".((isset($_GET["tipo"])) ? " selected" : "").">Tipo</option>\n";
@@ -38,11 +27,11 @@ echo "<option value=\"ingrediente\"".((isset($_GET["ingrediente"])) ? " selected
 echo "</select>\n"; 
 
 $value = "";
+
 if (isset($_GET["nome"])) $value = $_GET["nome"];
 if (isset($_GET["tipo"])) $value = $_GET["tipo"];
 if (isset($_GET["ingrediente"])) $value = $_GET["ingrediente"];
 echo "<input type=\"text\" id=\"valor\" name=\"valor\" value=\"".$value."\" size=\"20\"> \n";
-
 
 $parameters = array();
 if (isset($_GET["orderby"])) $parameters[] = "orderby=".$_GET["orderby"];
@@ -60,35 +49,37 @@ echo "<td></td>\n";
 echo "</tr>\n";
 
 $where = array();
+
 if (isset($_GET["nome"])) $where[] = "nome like '%".strtr($_GET["nome"], " ", "%")."%'";
-if (isset($_GET["tipo"])) $where[] = "tipo = '".$_GET["tipo"]."'";
-if (isset($_GET["ingrediente"])) $where[] = "ingrediente = '".$_GET["ingrediente"]."'";
+if (isset($_GET["tipo"])) $where[] = "tipo like '%".strtr($_GET["tipo"], " ", "%")."%'";//pesquisa por codigo
+if (isset($_GET["ingrediente"])) $where[] = "ingrediente like '%".strtr($_GET["ingrediente"], " ", "%")."%'";//não ta indo
 $where = (count($where) > 0) ? "where ".implode(" and ", $where) : "";
 
-$total = $db->query("select count(*) as total from sabor ".$where)->fetchArray()["total"];
+$total = $db->query("select count(*) from sabor ".$where)->fetchArray()["total"];
 
 $orderby = (isset($_GET["orderby"])) ? $_GET["orderby"] : "codigo asc";
 
 $offset = (isset($_GET["offset"])) ? max(0, min($_GET["offset"], $total-1)) : 0;
 $offset = $offset-($offset%$limit);
 
-$results = $db->query("select * from sabor".$where." order by ".$orderby." limit ".$limit." offset ".$offset);
-
-while ($row = $results->fetchArray()){
+$results = $db->query("select * from sabor ".$where." order by ".$orderby." limit ".$limit." offset ".$offset);
+while ($row = $results->fetchArray()) {
 	echo "<tr>\n";
 	echo "<td><a href=\"pizzariaC.php?codigo=".$row["codigo"]."\">&#x1F4DD;</a></td>\n";
-	echo "<td>".$row["nome"]."</td>\n";
-	echo "<td>\n";
-$results2 = $db->query("select tipo.nome as tipo from sabor join tipo on sabor.tipo = tipo.codigo where sabor.codigo= ".$row["codigo"]);
-while ($row2 = $results2->fetchArray()){
-	echo $row2["tipo"];
-}
-	echo "</td>\n";	echo "<td>\n";
-$results3 = $db->query("select ingrediente.nome as ingrediente,sabor.nome as sabor, tipo.nome as tipo from sabor join saboringrediente on saboringrediente.sabor=sabor.codigo join ingrediente on saboringrediente.ingrediente=ingrediente.codigo join tipo on sabor.tipo = tipo.codigo where sabor.codigo=".$row["codigo"]);
-while ($row3 = $results3->fetchArray()){
-	echo $row3["ingrediente"].",";
-}
-	echo "</td>\n";
+	echo "<td>".$row["nome"]."</td>\n";	echo "<td>\n";
+    $results2 = $db->query("select tipo.nome as tipo from sabor join tipo on sabor.tipo = tipo.codigo where sabor.codigo= ".$row["codigo"]);
+    while ($row2 = $results2->fetchArray()){
+        echo $row2["tipo"];
+    }
+        echo "</td>\n";
+        echo "<td>\n";
+        $results3 = $db->query("select ingrediente.nome as ingrediente,sabor.nome as sabor, tipo.nome as tipo from sabor join saboringrediente on saboringrediente.sabor=sabor.codigo join ingrediente on saboringrediente.ingrediente=ingrediente.codigo join tipo on sabor.tipo = tipo.codigo where sabor.codigo=".$row["codigo"]);
+        while ($row3 = $results3->fetchArray()){
+            echo $row3["ingrediente"].",";
+        }
+            echo "</td>\n";
+
+
 	echo "<td><a href=\"delete.php?codigo=".$row["codigo"]."\" onclick=\"return(confirm('Excluir ".$row["nome"]."?'));\">&#x1F5D1;</a></td>\n";
 	echo "</tr>\n";
 }
@@ -104,3 +95,4 @@ $db->close();
 ?>
 </body>
 </html>
+
