@@ -107,7 +107,7 @@ echo 'return document.getElementById("lista").innerHTML = table.join("");';
 echo '}';
 echo 'function preencheIngredientes(){';
 echo 'let componenteIngredientes = document.getElementById("componenteIngredientes");';
-ECHO 'console.log(componenteIngredientes);';
+echo 'console.log(componenteIngredientes);';
 echo 'let ingredientesEscolhidos = document.querySelectorAll(".ingredienteEscolhido");';
 echo 'componenteIngredientes.value="";';
 echo 'ingredientesEscolhidos.forEach(ingrediente => {';
