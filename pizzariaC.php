@@ -14,13 +14,15 @@ if (isset($_GET["codigo"])) {
 		$s = $sabor->fetchArray();
 		$db->close();
 		if($s === false){
-			echo "<font color=\"red\">Sabor não encontrada</font>";
-		}else{
+			echo "<font color=\"red\">Sabor não encontrado</font>";
+		}
+		else{
 	$db = new SQLite3("pizzaria.db");
 echo '<form name="insert" action="pizzariaC.php" method="post">';
 echo '<table>';
 echo '<caption><h1>Alterar Sabor</h1></caption>';
 echo '<tbody>';
+echo "<tr><td><input hidden type=\"text\" name=\"codigo\" value=\"" . $_GET["codigo"] . "\"></td></tr>";
 echo '<tr>';
 $nome = $db->query("select sabor.nome as nome from sabor where codigo = ".$_GET["codigo"]);
 while ($n = $nome->fetchArray()){
@@ -56,37 +58,75 @@ echo '</td>';
 echo '</tr>';
 echo '<tr>';
 echo '<td><label for="lista">Ingredientes</label></td>';
-echo '<td><table id="lista"></table></td>';
+echo '<td><table id="lista">';
+$ingredienteSabor= $db->query("select * from saboringrediente join ingrediente on saboringrediente.ingrediente = ingrediente.codigo where saboringrediente.sabor=". $_GET["codigo"]);
+while ($ingrediente = $ingredienteSabor->fetchArray()) {
+	echo '<tr><td value="'. $ingrediente["codigo"].'" class="ingredienteEscolhido">'. $ingrediente["nome"].'</td><td><input type="button" value="-" onclick="del(this)"></td></tr>';
+}
+
+echo '</table></td>';
 echo '</tr>';
 echo '<tr>';
-echo '<td><input type="submit" name="Alterar" value="Alterar"></td>';
+echo '<td><input type="submit" name="Alterar" value="Alterar" onClick="preencheIngredientes()"></td>';
+echo '<td><input type="text" id="componenteIngredientes" name="componenteIngredientes" hidden value=""></td>';
 echo '</tr>';
 echo '</tbody>';
 echo '</table>';
 echo '</form>';
 echo '<script>';
 echo 'const armazena = [];';
+echo 'let ingredientesEscolhidos = document.querySelectorAll(".ingredienteEscolhido");';
+echo 'ingredientesEscolhidos.forEach(ingrediente => {';
+echo 'if (!ingrediente.hidden) {';
+echo 'armazena.push([ingrediente.attributes[0].nodeValue, ingrediente.innerHTML]);';
+echo '}';
+echo '});';
+echo 'console.log(armazena);';
 echo 'const select = document.insert.ingrediente;';
+echo 'function indexOfArray(array, item) {';
+echo '    for (var i = 0; i < array.length; i++) {';
+echo '        if (array[i][0] == item[0] && array[i][1] == item[1]) {';
+echo '            return i;   ';
+echo '        }';
+echo '    }';
+echo '    return -1;';
+echo '}';
 echo 'function add() {';
-echo 'const value = select.options[select.selectedIndex].text;';
-echo 'if (armazena.indexOf(value) !== -1) {';
+echo 'const value = select.options[select.selectedIndex].value;';
+echo 'const text = select.options[select.selectedIndex].text;';
+echo 'const object = [value, text];';
+echo 'if (indexOfArray(armazena, object) !== -1) {';
 echo 'return;';
 echo '} else {';
-echo 'armazena.push(value);';
+echo 'armazena.push(object);';
 echo '}';
 echo 'lista(armazena);';
 echo '}';
 echo 'function del(that) {';
-echo 'const value = that.parentElement.previousElementSibling.innerHTML;';
-echo 'armazena.splice(armazena.indexOf(value), 1);';
+echo 'const value = that.parentElement.previousElementSibling.attributes[0].nodeValue;';
+echo 'const text = that.parentElement.previousElementSibling.innerHTML;';
+echo 'const object = [value, text];';
+echo 'armazena.splice(indexOfArray(armazena, object), 1);';
 echo 'lista(armazena);';
 echo '}';
 echo 'function lista(list) {';
 echo 'const table = list.map(i => {';
-echo 'return `<tr><td>${i}</td><td><input type="button" value="-" onclick="del(this)"></td></tr>`';
+echo 'return `<tr><td value="${i[0]}" class="ingredienteEscolhido">${i[1]}</td><td><input type="button" value="-" onclick="del(this)"></td></tr>`';
 echo '});';
 echo 'return document.getElementById("lista").innerHTML = table.join("");';
 echo '}';
+echo 'function preencheIngredientes(){';
+echo 'let componenteIngredientes = document.getElementById("componenteIngredientes");';
+echo 'console.log(componenteIngredientes);';
+echo 'let ingredientesEscolhidos = document.querySelectorAll(".ingredienteEscolhido");';
+echo 'componenteIngredientes.value="";';
+echo 'ingredientesEscolhidos.forEach(ingrediente => {';
+echo 'if (!ingrediente.hidden) {';
+echo 'console.log(ingrediente);';
+echo 'componenteIngredientes.value=componenteIngredientes.value + (componenteIngredientes.value == "" ? "" : ",") + ingrediente.attributes[0].nodeValue;';
+echo '}';
+echo '});';
+echo  '}';
 echo '</script>';
 	}
 }else{
@@ -95,16 +135,22 @@ echo '</script>';
 			if ($error == "") {
 				$db = new SQLite3("pizzaria.db");
 				$db->exec("PRAGMA foreign_keys = ON");
-				$db->exec("update sabor set nome = '".$_POST["nome"]."' where codigo = ".$_POST[$_GET["codigo"]]);				
-				echo $db->changes()." Sabor(es) alterado(s)";
+				$db->exec("update sabor set nome = '".$_POST["nome"]."', tipo=" . $_POST["tipo"]." where codigo = ".$_POST["codigo"]);
+				$db->exec("delete from saboringrediente where sabor = " . $_POST["codigo"]);
+
+				$ingredientes = explode(",", $_POST["componenteIngredientes"]);
+
+				foreach ($ingredientes as $ingrediente) {
+					$db->exec("insert into saboringrediente (sabor,ingrediente) values (" .$_POST["codigo"] . "," . $ingrediente . ")");
+				}
+
+				echo $db->changes()." Sabor alterado!";
 				$db->close();
 		}else {
 			echo "<font color=\"red\">".$error."</font>";
 		}
 	}
 }
-		//echo $db->changes()." coisa incluída(s)<br>\n";
-		//echo $db->lastInsertRowID()." é o código da última coisa incluída.\n";
 
 ?>
 </body>
