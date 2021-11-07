@@ -1,13 +1,10 @@
 <html>
+
 <head>
 	<title>Cadastro de Sabores</title>
-	<style>
-		a {
-			text-decoration: none;
-		}
-
-	</style>
+	<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 	<?php
 	function url($campo, $valor)
@@ -56,7 +53,7 @@
 	echo "<a href=\"\" onclick=\"value = document.getElementById('valor').value.trim().replace(/ +/g, '+'); result = '" . strtr(implode("&", $parameters), " ", "+") . "'; result = ((value != '') ? document.getElementById('campo').value+'='+value+((result != '') ? '&' : '') : '')+result; this.href ='pizzariaA.php'+((result != '') ? '?' : '')+result;\">&#x1F50E;</a><br>\n";
 	echo "<br>\n";
 
-	echo "<table border=\"1\">\n";
+	echo "<table class=\"grid\">\n";
 	echo "<tr>\n";
 	echo "<td><a href=\"pizzariaB.php\">&#x1F4C4;</a></td>\n";
 	echo "<td><b>Nome</b> <a href=\"" . url("orderby", "nome+asc") . "\">&#x25BE;</a> <a href=\"" . url("orderby", "nome+desc") . "\">&#x25B4;</a></td>\n";
@@ -94,9 +91,9 @@
 		$results3 = $db->query("select ingrediente.nome as ingrediente,sabor.nome as sabor, tipo.nome as tipo from sabor join saboringrediente on saboringrediente.sabor=sabor.codigo join ingrediente on saboringrediente.ingrediente=ingrediente.codigo join tipo on sabor.tipo = tipo.codigo where sabor.codigo=" . $row["codigo"]);
 		$ingredientes = "";
 		while ($row3 = $results3->fetchArray()) {
-			$ingredientes .= $row3["ingrediente"] . ",";
+			$ingredientes .= $row3["ingrediente"] . ", ";
 		}
-		echo substr($ingredientes,0,-1);
+		echo substr($ingredientes, 0, -2);
 		echo "</td>\n";
 
 

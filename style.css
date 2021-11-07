@@ -1,0 +1,32 @@
+a {
+	text-decoration: none;
+    color: #2f6b31;
+}
+tr:nth-child(even) {
+	background-color: #e6ffd4;
+}
+h1 {
+    font-weight: 300;
+    font-size: 38px;
+    margin: 0px 0px 0px 0px;
+    line-height: 120%;
+    font-family: 'Open sans', sans-serif;
+}
+a {
+    text-decoration: none;
+}
+button:hover {
+    background-color: #4CAF50;
+    color: white;
+}
+button {
+    background-color: white;
+    color: black;
+    border: 2px solid #4CAF50;
+}
+.grid {
+    width: 100%;
+}
+.paginacao { 
+    font-size: 50% 
+}
