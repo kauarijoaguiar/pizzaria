@@ -5,6 +5,7 @@
 		a {
 			text-decoration: none;
 		}
+
 	</style>
 </head>
 <body>
@@ -60,7 +61,7 @@
 	echo "<td><a href=\"pizzariaB.php\">&#x1F4C4;</a></td>\n";
 	echo "<td><b>Nome</b> <a href=\"" . url("orderby", "nome+asc") . "\">&#x25BE;</a> <a href=\"" . url("orderby", "nome+desc") . "\">&#x25B4;</a></td>\n";
 	echo "<td><b>Tipo</b> <a href=\"" . url("orderby", "tipo+asc") . "\">&#x25BE;</a> <a href=\"" . url("orderby", "tipo+desc") . "\">&#x25B4;</a></td>\n";
-	echo "<td><b>Ingredientes</b></td>\n";
+	echo "<td><b>Ingrediente</b></td>\n";
 	echo "<td></td>\n";
 	echo "</tr>\n";
 
@@ -91,9 +92,11 @@
 		echo "</td>\n";
 		echo "<td>\n";
 		$results3 = $db->query("select ingrediente.nome as ingrediente,sabor.nome as sabor, tipo.nome as tipo from sabor join saboringrediente on saboringrediente.sabor=sabor.codigo join ingrediente on saboringrediente.ingrediente=ingrediente.codigo join tipo on sabor.tipo = tipo.codigo where sabor.codigo=" . $row["codigo"]);
+		$ingredientes = "";
 		while ($row3 = $results3->fetchArray()) {
-			echo $row3["ingrediente"] . ",";
+			$ingredientes .= $row3["ingrediente"] . ",";
 		}
+		echo substr($ingredientes,0,-1);
 		echo "</td>\n";
 
 
