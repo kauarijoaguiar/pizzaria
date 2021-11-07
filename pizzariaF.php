@@ -190,7 +190,11 @@
     echo '}';
     echo '});';
     echo  '}';
-
+    echo 'document.insertPizzaNaComanda.onsubmit = (evt) => {';
+    echo 'if (armazena.length <= 0) {';
+    echo 'evt.preventDefault();';
+    echo '}';
+    echo '}';
     echo '</script>';
   }
 
