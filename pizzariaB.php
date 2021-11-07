@@ -116,6 +116,7 @@ echo 'console.log(ingrediente);';
 echo 'componenteIngredientes.value=componenteIngredientes.value + (componenteIngredientes.value == "" ? "" : ",") + ingrediente.attributes[0].nodeValue;';
 echo '}';
 echo '});';
+
 echo  '}';
 echo 'var nome = document.querySelector("#nome");';
 echo 'nome.addEventListener("input", function () {';
