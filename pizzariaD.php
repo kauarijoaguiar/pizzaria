@@ -130,6 +130,7 @@ while ($row = $results->fetchArray()){
 	echo "R$ ".($row4["total"] == "" ? "0,0" : (str_replace(".",",",$row4["total"])));
 	}
 	echo "</td>\n";
+
 	
 	echo "<td>".($row["pago"] > 0 ? 'Sim':'Não')."</td>\n";
 	while ($row3 = $results3->fetchArray()){
