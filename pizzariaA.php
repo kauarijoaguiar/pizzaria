@@ -31,7 +31,14 @@ $value = "";
 if (isset($_GET["nome"])) $value = $_GET["nome"];
 if (isset($_GET["tipo"])) $value = $_GET["tipo"];
 if (isset($_GET["ingrediente"])) $value = $_GET["ingrediente"];
-echo "<input type=\"text\" id=\"valor\" name=\"valor\" value=\"".$value."\" size=\"20\"> \n";
+echo "<input type=\"text\" id=\"valor\" name=\"valor\" value=\"".$value."\" size=\"20\" pattern=\"[a-z\s]+$\" required=\"\"> \n";
+
+echo '<script>';
+echo 'var valor = document.querySelector("#valor");';
+echo 'valor.addEventListener("input", function () {';
+echo 'valor.value = valor.value.toUpperCase();';
+echo '});';
+echo '</script>';
 
 $parameters = array();
 if (isset($_GET["orderby"])) $parameters[] = "orderby=".$_GET["orderby"];
@@ -55,7 +62,7 @@ if (isset($_GET["tipo"])) $where[] = "tipo like '%".strtr($_GET["tipo"], " ", "%
 if (isset($_GET["ingrediente"])) $where[] = "ingrediente like '%".strtr($_GET["ingrediente"], " ", "%")."%'";//não ta indo
 $where = (count($where) > 0) ? "where ".implode(" and ", $where) : "";
 
-$total = $db->query("select count(*) from sabor ".$where)->fetchArray()["total"];
+$total = $db->query("select count(*) as total from sabor ".$where)->fetchArray()["total"];
 
 $orderby = (isset($_GET["orderby"])) ? $_GET["orderby"] : "codigo asc";
 
