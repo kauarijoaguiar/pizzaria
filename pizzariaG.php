@@ -21,7 +21,7 @@ function url($campo, $valor) {
 	if (isset($_GET["valor"])) $result["valor"] = "valor=".$_GET["valor"];
 	if (isset($_GET["total"])) $result["total"] = "total=".$_GET["total"];
 
-    if (isset($_GET["orderby"])) $result["orderby"] = "orderby=".$_GET["orderby"];
+	if (isset($_GET["orderby"])) $result["orderby"] = "orderby=".$_GET["orderby"];
 	if (isset($_GET["offset"])) $result["offset"] = "offset=".$_GET["offset"];
 	$result[$campo] = $campo."=".$valor;
 	return("pizzariaA.php?".strtr(implode("&", $result), " ", "+"));
@@ -52,9 +52,9 @@ echo "<tr>\n";
 echo "<td><b>Tamanho</b> <a href=\"".url("orderby", "tamanho+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "tamanho+desc")."\">&#x25B4;</a></td>\n";
 echo "<td><b>Borda</b> <a href=\"".url("orderby", "borda+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "borda+desc")."\">&#x25B4;</a></td>\n";
 echo "<td><b>Sabores</b></td>\n";
+echo "<td><b>Valor</b> <a href=\"".url("orderby", "valor+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "valor+desc")."\">&#x25B4;</a></td>\n";
 echo "<td><b>Total</b></td>\n";
 
-echo "<td><b>Valor</b> <a href=\"".url("orderby", "valor+asc")."\">&#x25BE;</a> <a href=\"".url("orderby", "valor+desc")."\">&#x25B4;</a></td>\n";
 echo "<td></td>\n";
 echo "</tr>\n";
 
@@ -113,7 +113,7 @@ while($row = $results->fetchArray()){
 			join sabor on pizzasabor.sabor = sabor.codigo
 			join precoportamanho on precoportamanho.tipo = sabor.tipo and precoportamanho.tamanho = pizza.tamanho
 			left join borda on pizza.borda = borda.codigo
-		where comanda.numero = ".$row["numero"]." group by pizza.codigo ) as tmp ; ");
+		where comanda.numero = ".$row["numero"]." group by pizza.codigo) as tmp;");
     while ($row2 = $results2->fetchArray()){
         echo $row2["total"];
     }
@@ -125,7 +125,6 @@ while($row = $results->fetchArray()){
 
 
 
-echo "<td><b>Total</b></td>\n";
 echo "</table>\n";
 echo '<td><input type="submit" name="voltar" value="voltar"></td>';
 
