@@ -89,7 +89,26 @@ $orderby = (isset($_GET["orderby"])) ? $_GET["orderby"] : "numero asc";
 $offset = (isset($_GET["offset"])) ? max(0, min($_GET["offset"], $total-1)) : 0;
 $offset = $offset-($offset%$limit);
 
-$results = $db->query("select * from comanda".$where." order by ".$orderby." limit ".$limit." offset ".$offset);
+
+$results = $db->query("select numero, 
+case cast (strftime('%w', data) as integer)
+  when 0 then 'Dom'
+  when 1 then 'Seg'
+  when 2 then 'Ter'
+  when 3 then 'Qua'
+  when 4 then 'Qui'
+  when 5 then 'Sex'
+  else 'Sáb' end || ' ' || strftime('%d/%m/%Y', data)  as data, mesa, pago from comanda" . $where . " order by " . $orderby . " limit " . $limit . " offset " . $offset);
+
+// $results = $db->query("select numero, 
+// case cast (strftime('%w', data) as integer)
+//   when 0 then 'Sunday'
+//   when 1 then 'Monday'
+//   when 2 then 'Tuesday'
+//   when 3 then 'Wednesday'
+//   when 4 then 'Thursday'
+//   when 5 then 'Friday'
+//   else 'Saturday' end as data, mesa, pago, count(pizza.codigo) as pizza from comanda join pizza on pizza.comanda = comanda.numero ".$where." order by ".$orderby." limit ".$limit." offset ".$offset);
 
 while ($row = $results->fetchArray()){
 	echo "<tr>";
@@ -153,9 +172,3 @@ $db->close();
 ?>
 </body>
 </html>
-
-delete from pizza
-JOIN COMANDA ON PIZZA.COMANDA=COMANDA.NUMERO 
-JOIN PIZZASABOR ON PIZZA.CODIGO=PIZZASABOR.PIZZA
-JOIN SABOR ON PIZZASABOR.SABOR = SABOR.CODIGO
-where comanda.numero = 14630;
