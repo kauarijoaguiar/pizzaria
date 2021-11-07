@@ -33,7 +33,7 @@
 		echo '<tbody>';
 		echo '<tr>';
 		echo '<td><label for="nome">Nome</label></td>';
-		echo '<td><input type="text" name="nome" id="nome" pattern="[A-Z\s]+$"></td>';
+		echo '<td><input type="text" name="nome" id="nome" required></td>';
 		echo '</tr>';
 		echo '<tr>';
 		echo '<td><label for="tipo">Tipo</label></td>';
@@ -119,6 +119,7 @@
 		echo 'nome.addEventListener("input", function () {';
 		echo 'nome.value = nome.value.toUpperCase();';
 		echo '});';
+
 		echo '</script>';
 	}
 
