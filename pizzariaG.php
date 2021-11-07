@@ -113,7 +113,7 @@ while($row = $results->fetchArray()){
 			join sabor on pizzasabor.sabor = sabor.codigo
 			join precoportamanho on precoportamanho.tipo = sabor.tipo and precoportamanho.tamanho = pizza.tamanho
 			left join borda on pizza.borda = borda.codigo
-		where comanda.numero = ".$row["numero"]." group by pizza.codigo) as tmp;");
+		where comanda.numero = ".$_GET["numero"]." group by pizza.codigo) as tmp;");
     while ($row2 = $results2->fetchArray()){
         echo $row2["total"];
     }
