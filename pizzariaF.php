@@ -2,14 +2,32 @@
 <title>Cadastro de Comandas</title>
 <body>
 <?php
-
 if (isset($_POST["Inclui"])) {
+  
 	$error = "";
 	if ($error == "") {
 		$db = new SQLite3("pizzaria.db");
 		$db->exec('PRAGMA foreign_keys = ON');
 		$db->exec("insert into pizza (comanda, tamanho, borda) values (".$_POST["numero"].",".$_POST['Tamanho'].",".$_POST['borda'].")");
-		$db->exec("insert into pizzasabor (comanda, tamanho, borda) values (".$_POST["numero"].",".$_POST['Tamanho'].",".$_POST['borda'].")");
+
+    $dom = new DOMDocument();
+    $dom->loadHTML("pizzariaF.php");
+    $table = $dom->getElementById('lista');
+
+    echo 'oi';
+    foreach ($table->childNodes as $linha) {
+      if ($linha->nodeName == 'tr') {
+        foreach ($linha->childNodes as $celula) {
+          if ($celula->nodeName == 'td') {
+            if (strlen($celula->nodeValue)) {
+              echo "{$celula->nodeValue}\n";
+            }
+          }
+        }
+      }
+    }
+    
+		$db->exec("insert into pizzasabor (pizza, sabor) values (".$db->lastInsertRowID().",".$_POST['Tamanho'].",".$_POST['borda'].")");
 		echo "Pizza incluída na comanda ".$_POST['numero']."!<br>\n";
 		$db->close();
 	}else{
@@ -17,6 +35,7 @@ if (isset($_POST["Inclui"])) {
 	}
 }
 else {
+  
     $db = new SQLite3("pizzaria.db");
     $numero = $_GET["numero"];
     $tamanho = $db->query("select tamanho.nome as tamanho from tamanho");
@@ -101,9 +120,6 @@ echo '<td><input type="submit" name="inclui" value="Inclui"></td>';
 echo '</tr>';
 echo '</tbody>';
 echo '</table>';
-echo '</form>';
-echo '<form name="saborPizza" action="pizzariaA.php" method="post" hidden>';
-echo '<input type="number" name="pizza" id=pizza" readonly>';
 echo '</form>';
 echo '<script>';
 echo 'const armazena = [];';
