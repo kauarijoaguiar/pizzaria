@@ -31,7 +31,7 @@ $value = "";
 if (isset($_GET["nome"])) $value = $_GET["nome"];
 if (isset($_GET["tipo"])) $value = $_GET["tipo"];
 if (isset($_GET["ingrediente"])) $value = $_GET["ingrediente"];
-echo "<input type=\"text\" id=\"valor\" name=\"valor\" value=\"".$value."\" size=\"20\" pattern=\"[a-z\s]+$\" required=\"\"> \n";
+echo "<input type=\"text\" id=\"valor\" name=\"valor\" value=\"".$value."\" size=\"20\"> \n";
 
 echo '<script>';
 echo 'var valor = document.querySelector("#valor");';
