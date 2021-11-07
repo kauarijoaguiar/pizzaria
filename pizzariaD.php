@@ -103,7 +103,7 @@ while ($row = $results->fetchArray()){
 	}
 	echo "</td>";
 
-	$results3 = $db->query("select count(pizza) as pizza from pizza join comanda on pizza.comanda = comanda.numero join pizzasabor on pizza.codigo = pizzasabor.pizza join sabor on pizzasabor.sabor = sabor.codigo join tipo on sabor.tipo = tipo.codigo where comanda.numero= ".$row["numero"]);
+	$results3 = $db->query("select count(codigo) as pizza from pizza join comanda on pizza.comanda = comanda.numero where comanda.numero= ".$row["numero"]);
 	while ($row3 = $results3->fetchArray()){
 		echo "<td>";
 		echo $row3["pizza"];
@@ -130,23 +130,7 @@ while ($row = $results->fetchArray()){
 	echo "R$ ".($row4["total"] == "" ? "0,0" : (str_replace(".",",",$row4["total"])));
 	}
 	echo "</td>\n";
-/*
-select sum(tmp.preco) as total
-from
-    (select
-        max(case
-                when borda.preco is null then 0
-                else borda.preco
-            end+precoportamanho.preco) as preco
-    from comanda
-        join pizza on pizza.comanda = comanda.numero
-        join pizzasabor on pizzasabor.pizza = pizza.codigo
-        join sabor on pizzasabor.sabor = sabor.codigo
-        join precoportamanho on precoportamanho.tipo = sabor.tipo and precoportamanho.tamanho = pizza.tamanho
-        left join borda on pizza.borda = borda.codigo
-    where comanda.numero = 1
-    group by pizza.codigo) as tmp;
-	*/
+
 	
 	echo "<td>".($row["pago"] > 0 ? 'Sim':'Não')."</td>\n";
 	while ($row3 = $results3->fetchArray()){
