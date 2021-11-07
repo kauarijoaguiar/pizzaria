@@ -33,7 +33,12 @@ echo '<td><label for="tipo">Tipo</label></td>';
 echo '<td><select name="tipo" id="tipo">';
 $results = $db->query("select * from tipo");
 while ($row = $results->fetchArray()){
-  echo "<option value=\"".$row["codigo"]."\">".$row["nome"]."</option>";
+	echo "<option value=\"".$row["codigo"]."\">".$row["nome"]."</option>";
+	$tp = $db->query("select tipo.codigo as codigo, tipo.nome as nome from tipo join sabor on sabor.tipo = tipo.codigo where sabor.codigo =" .$_GET["codigo"]);
+	while($rowtipo=$tp->fetchArray()){
+		echo "<option value=\"nome\" selected disabled hidden>".$rowtipo["nome"]."</option>";
+
+	}
 }
 echo '</select></td>';
 echo '</tr>';
@@ -110,3 +115,4 @@ if (isset($_POST["Alterar"])) {
 }
 ?>
 </html>
+
