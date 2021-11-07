@@ -38,7 +38,7 @@ else {
   
     $db = new SQLite3("pizzaria.db");
     $numero = $_GET["numero"];
-    $tamanho = $db->query("select tamanho.nome as tamanho from tamanho");
+    $tamanho = $db->query("select tamanho.nome as tamanho, codigo from tamanho");
     $bordas = $db->query("select codigo, nome from borda");
     setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
     date_default_timezone_set('America/Sao_Paulo');
@@ -55,9 +55,9 @@ else {
     echo '<td><input type="text" name="data" id="data" readonly style="border:none; background-color: transparent; font-size: 15px" value="'.ucfirst(strftime('%a %d/%m/%y', strtotime('today'))).'"></td>';
     echo '</tr>';
     echo '<tr>';
-    echo '<td><label for="tamanho">Tamanho</label></td>';
+    echo '<td><label for="Tamanho">Tamanho</label></td>';
     echo '<td>';
-    echo '<select name="tamanho" id="tamanho">';
+    echo '<select name="Tamanho" id="Tamanho">';
     while ($t = $tamanho->fetchArray()){
       echo "<option value=\"".$t["codigo"]."\">".ucfirst(strtolower($t["tamanho"]))."</option>";
     }
@@ -116,7 +116,8 @@ echo '<table id="lista"></table>';
 echo '</td>';
 echo '</tr>';
 echo '<tr>';
-echo '<td><input type="submit" name="inclui" value="Inclui"></td>';
+echo '<td><input type="button" name="Inclui" value="Inclui" onClick="preencheSabores()"></td>';
+echo '<td><input type="text" id="componenteSabores" name="componenteSabores" value=""></td>';
 echo '</tr>';
 echo '</tbody>';
 echo '</table>';
@@ -149,7 +150,7 @@ echo 'lista(armazena);';
 echo '}';
 echo 'function lista(list) {';
 echo 'const table = list.map(i => {';
-echo 'return `<tr><td>${i}</td><td><input type="button" value="-" onclick="del(this)"></td></tr>`';
+echo 'return `<tr><td class="saborEscolhido">${i}</td><td><input type="button" value="-" onclick="del(this)"></td></tr>`';
 echo '});';
 echo 'return document.getElementById("lista").innerHTML = table.join("");';
 echo '}';
@@ -162,6 +163,17 @@ echo '}';
 echo '});';
 echo 'return element;';
 echo '}';
+echo 'function preencheSabores(){';
+echo 'let componenteSabores = document.getElementById("componenteSabores");';
+echo 'let saboresEscolhidos = document.querySelectorAll(".saborEscolhido");';
+echo 'componenteSabores.value="";';
+echo 'saboresEscolhidos.forEach(sabor => {';
+echo 'if (!sabor.hidden) {';
+echo 'console.log(sabor);';
+echo 'componenteSabores.value=componenteSabores.value + "," + sabor.innerText;';
+echo '}';
+echo '});';
+echo  '}';
 echo '</script>';
 	}
 
