@@ -135,6 +135,11 @@ PRAGMA foreign_keys = ON;
 			echo 'nome.addEventListener("input", function () {';
 			echo 'nome.value = nome.value.toUpperCase();';
 			echo '});';
+			echo 'document.insert.onsubmit = (evt) => {';
+			echo 'if (armazena.length <= 0) {';
+			echo 'evt.preventDefault();';
+			echo '}';
+			echo '}';
 			echo '</script>';
 		}
 	} else {

@@ -109,19 +109,19 @@
 		echo 'componenteIngredientes.value="";';
 		echo 'ingredientesEscolhidos.forEach(ingrediente => {';
 		echo 'if (!ingrediente.hidden) {';
-		echo 'console.log(ingrediente);';
 		echo 'componenteIngredientes.value=componenteIngredientes.value + (componenteIngredientes.value == "" ? "" : ",") + ingrediente.attributes[0].nodeValue;';
 		echo '}';
 		echo '});';
-
 		echo  '}';
 		echo 'var nome = document.querySelector("#nome");';
 		echo 'nome.addEventListener("input", function () {';
 		echo 'nome.value = nome.value.toUpperCase();';
 		echo '});';
-		echo 'if(armazena.length  !== 0){';
-			echo 'document.insert.submit();';
-			echo '}';
+		echo 'document.insert.onsubmit = (evt) => {';
+		echo 'if (armazena.length <= 0) {';
+		echo 'evt.preventDefault();';
+		echo '}';
+		echo '}';
 		echo '</script>';
 	}
 
