@@ -33,7 +33,7 @@
 		echo '<tbody>';
 		echo '<tr>';
 		echo '<td><label for="nome">Nome</label></td>';
-		echo '<td><input type="text" name="nome" id="nome" pattern="[A-Z\s]+$"></td>';
+		echo '<td><input type="text" name="nome" id="nome" required></td>';
 		echo '</tr>';
 		echo '<tr>';
 		echo '<td><label for="tipo">Tipo</label></td>';
@@ -109,16 +109,19 @@
 		echo 'componenteIngredientes.value="";';
 		echo 'ingredientesEscolhidos.forEach(ingrediente => {';
 		echo 'if (!ingrediente.hidden) {';
-		echo 'console.log(ingrediente);';
 		echo 'componenteIngredientes.value=componenteIngredientes.value + (componenteIngredientes.value == "" ? "" : ",") + ingrediente.attributes[0].nodeValue;';
 		echo '}';
 		echo '});';
-
 		echo  '}';
 		echo 'var nome = document.querySelector("#nome");';
 		echo 'nome.addEventListener("input", function () {';
 		echo 'nome.value = nome.value.toUpperCase();';
 		echo '});';
+		echo 'document.insert.onsubmit = (evt) => {';
+		echo 'if (armazena.length <= 0) {';
+		echo 'evt.preventDefault();';
+		echo '}';
+		echo '}';
 		echo '</script>';
 	}
 

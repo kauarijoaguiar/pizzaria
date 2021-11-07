@@ -32,7 +32,7 @@ PRAGMA foreign_keys = ON;
 			$nome = $db->query("select sabor.nome as nome from sabor where codigo = " . $_GET["codigo"]);
 			while ($n = $nome->fetchArray()) {
 				echo '<td><label for="nome">Nome</label></td>';
-				echo "<td><input type=\"text\" name=\"nome\" id=\"nome\" value=\"" . $n["nome"] . "\" pattern=\"[A-Z\s]+$\"></td>";
+				echo "<td><input type=\"text\" name=\"nome\" id=\"nome\" value=\"" . $n["nome"] . "\" required></td>";
 			}
 			echo '</tr>';
 			echo '<tr>';
@@ -135,6 +135,11 @@ PRAGMA foreign_keys = ON;
 			echo 'nome.addEventListener("input", function () {';
 			echo 'nome.value = nome.value.toUpperCase();';
 			echo '});';
+			echo 'document.insert.onsubmit = (evt) => {';
+			echo 'if (armazena.length <= 0) {';
+			echo 'evt.preventDefault();';
+			echo '}';
+			echo '}';
 			echo '</script>';
 		}
 	} else {
