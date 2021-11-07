@@ -36,7 +36,7 @@ echo '<caption><h1>Incluir Sabor</h1></caption>';
 echo '<tbody>';
 echo '<tr>';
 echo '<td><label for="nome">Nome</label></td>';
-echo '<td><input type="text" name="nome" id="nome"></td>';
+echo '<td><input type="text" name="nome" id="nome" pattern="[a-z\s]+$"></td>';
 echo '</tr>';
 echo '<tr>';
 echo '<td><label for="tipo">Tipo</label></td>';
@@ -117,6 +117,10 @@ echo 'componenteIngredientes.value=componenteIngredientes.value + (componenteIng
 echo '}';
 echo '});';
 echo  '}';
+echo 'var nome = document.querySelector("#nome");';
+echo 'nome.addEventListener("input", function () {';
+echo 'nome.value = nome.value.toUpperCase();';
+echo '});';
 echo '</script>';
 	}
 
