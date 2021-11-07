@@ -126,7 +126,7 @@ while($row = $results->fetchArray()){
 
 
 echo "</table>\n";
-echo '<td><input type="submit" name="voltar" value="voltar"></td>';
+echo "<td><a href=\"pizzariaD.php\"><button>Voltar</button></a></td>";
 
 echo "<br>\n";
 
