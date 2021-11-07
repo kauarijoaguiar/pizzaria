@@ -124,7 +124,7 @@ while($row = $results->fetchArray()){
 }
 
 
-
+echo "<td><b>Total</b></td>\n";
 echo "</table>\n";
 echo "<td><a href=\"pizzariaD.php\"><button>Voltar</button></a></td>";
 
