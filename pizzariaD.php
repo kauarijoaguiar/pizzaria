@@ -112,14 +112,22 @@ while ($row = $results->fetchArray()){
 	}
 	echo "<td>\n";
 	
-	$results4 = $db->query("select max(case when borda.preco is null then 0 else borda.preco end + precoportamanho.preco) as valor from comanda
-	join pizza on pizza.comanda = comanda.numero
-	join pizzasabor on pizzasabor.pizza = pizza.codigo
-	join sabor on pizzasabor.sabor = sabor.codigo
-	join precoportamanho on precoportamanho.tipo = sabor.tipo and precoportamanho.tamanho = pizza.tamanho
-	left join borda on pizza.borda = borda.codigo where comanda.numero = ".$row["numero"]);
+	$results4 = $db->query("select sum(tmp.preco) as total
+	from
+		(select
+			max(case
+					when borda.preco is null then 0
+					else borda.preco
+				end+precoportamanho.preco) as preco
+		from comanda
+			join pizza on pizza.comanda = comanda.numero
+			join pizzasabor on pizzasabor.pizza = pizza.codigo
+			join sabor on pizzasabor.sabor = sabor.codigo
+			join precoportamanho on precoportamanho.tipo = sabor.tipo and precoportamanho.tamanho = pizza.tamanho
+			left join borda on pizza.borda = borda.codigo
+		where comanda.numero = ".$row["numero"]." group by pizza.codigo) as tmp;");
 	while ($row4 = $results4->fetchArray()){
-	echo "R$ ".($row4["valor"] == "" ? "0,0" : (str_replace(".",",",$row4["valor"])));
+	echo "R$ ".($row4["total"] == "" ? "0,0" : (str_replace(".",",",$row4["total"])));
 	}
 	echo "</td>\n";
 /*

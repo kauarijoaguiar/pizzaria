@@ -31,8 +31,7 @@ echo '</tr>';
 echo '<tr>';
 echo '<td><label for="tipo">Tipo</label></td>';
 echo '<td><select name="tipo" id="tipo">';
-$results = $db->query("select tipo.nome as nome from tipo
-join sabor on sabor.tipo = tipo.codigo where sabor.codigo= " .$_GET["codigo"]);
+$results = $db->query("select * from tipo");
 while ($row = $results->fetchArray()){
   echo "<option value=\"".$row["codigo"]."\">".$row["nome"]."</option>";
 }
