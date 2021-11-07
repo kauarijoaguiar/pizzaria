@@ -113,14 +113,15 @@
 		echo 'componenteIngredientes.value=componenteIngredientes.value + (componenteIngredientes.value == "" ? "" : ",") + ingrediente.attributes[0].nodeValue;';
 		echo '}';
 		echo '});';
-		echo 'if(armazena.length  != 0){';
-			echo 'document.insert.submit();';
-			echo '}';
+
 		echo  '}';
 		echo 'var nome = document.querySelector("#nome");';
 		echo 'nome.addEventListener("input", function () {';
 		echo 'nome.value = nome.value.toUpperCase();';
 		echo '});';
+		echo 'if(armazena.length  !== 0){';
+			echo 'document.insert.submit();';
+			echo '}';
 		echo '</script>';
 	}
 
