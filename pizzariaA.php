@@ -97,7 +97,7 @@
 		echo "</td>\n";
 
 
-		echo "<td><a href=\"delete.php?codigo=" . $row["codigo"] . "\" onclick=\"return(confirm('Excluir " . $row["nome"] . "?'));\">&#x1F5D1;</a></td>\n";
+		echo "<td><a href=\"delete.php?codigo=" . $row["codigo"] . "\" onclick=\"return(confirm('Tem certeza que deseja eliminar o sabor " . $row["nome"] . "?'));\">&#x1F5D1;</a></td>\n";
 		echo "</tr>\n";
 	}
 

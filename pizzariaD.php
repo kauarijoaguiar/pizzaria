@@ -155,7 +155,7 @@ case cast (strftime('%w', data) as integer)
 		while ($row3 = $results3->fetchArray()) {
 			echo "<td>" . ($row["pago"] == 0 && $row3["pizza"] > 0 ?  "<a href=\"pagarComanda.php?numero=" . $row["numero"] . "\">&#128181;</a>" : '') . "</td>";
 			echo "<td>" . ($row["pago"] == 0 && $row3["pizza"] > 0 ?  "<a href=\"pagarComanda.php?numero=" . $row["numero"] . "\">&#128179;</a>" : '') . "</td>";
-			echo '<td>' . ($row3["pizza"] == 0 ? "<a href=\"deleteComanda.php?numero=" . $row["numero"] . "\" onclick=\"return(confirm('Excluir comanda de número " . $row["numero"] . "?'));\">&#x1F5D1;</a>" : '') . '</td>';
+			echo '<td>' . ($row3["pizza"] == 0 ? "<a href=\"deleteComanda.php?numero=" . $row["numero"] . "\" onclick=\"return(confirm('Tem certeza que deseja eliminar a comanda de número " . $row["numero"] . "?'));\">&#x1F5D1;</a>" : '') . '</td>';
 		}
 		echo "</tr>\n";
 	}
