@@ -103,7 +103,7 @@ while ($row = $results->fetchArray()){
 	}
 	echo "</td>";
 
-	$results3 = $db->query("select count(pizza) as pizza from pizza join comanda on pizza.comanda = comanda.numero join pizzasabor on pizza.codigo = pizzasabor.pizza join sabor on pizzasabor.sabor = sabor.codigo join tipo on sabor.tipo = tipo.codigo where comanda.numero= ".$row["numero"]);
+	$results3 = $db->query("select count(codigo) as pizza from pizza join comanda on pizza.comanda = comanda.numero where comanda.numero= ".$row["numero"]);
 	while ($row3 = $results3->fetchArray()){
 		echo "<td>";
 		echo $row3["pizza"];
