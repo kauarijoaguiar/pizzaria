@@ -36,7 +36,7 @@ echo '<caption><h1>Incluir Sabor</h1></caption>';
 echo '<tbody>';
 echo '<tr>';
 echo '<td><label for="nome">Nome</label></td>';
-echo '<td><input type="text" name="nome" id="nome"></td>';
+echo '<td><input type="text" name="nome" id="nome" pattern="[A-Z\s]+$"></td>';
 echo '</tr>';
 echo '<tr>';
 echo '<td><label for="tipo">Tipo</label></td>';
@@ -107,7 +107,7 @@ echo 'return document.getElementById("lista").innerHTML = table.join("");';
 echo '}';
 echo 'function preencheIngredientes(){';
 echo 'let componenteIngredientes = document.getElementById("componenteIngredientes");';
-ECHO 'console.log(componenteIngredientes);';
+echo 'console.log(componenteIngredientes);';
 echo 'let ingredientesEscolhidos = document.querySelectorAll(".ingredienteEscolhido");';
 echo 'componenteIngredientes.value="";';
 echo 'ingredientesEscolhidos.forEach(ingrediente => {';
@@ -117,6 +117,10 @@ echo 'componenteIngredientes.value=componenteIngredientes.value + (componenteIng
 echo '}';
 echo '});';
 echo  '}';
+echo 'var nome = document.querySelector("#nome");';
+echo 'nome.addEventListener("input", function () {';
+echo 'nome.value = nome.value.toUpperCase();';
+echo '});';
 echo '</script>';
 	}
 

@@ -27,7 +27,7 @@ echo '<tr>';
 $nome = $db->query("select sabor.nome as nome from sabor where codigo = ".$_GET["codigo"]);
 while ($n = $nome->fetchArray()){
 echo '<td><label for="nome">Nome</label></td>';
-echo "<td><input type=\"text\" name=\"nome\" id=\"nome\" value=\"".$n["nome"]."\"></td>";
+echo "<td><input type=\"text\" name=\"nome\" id=\"nome\" value=\"".$n["nome"]."\" pattern=\"[A-Z\s]+$\"></td>";
 }
 echo '</tr>';
 echo '<tr>';
@@ -127,6 +127,10 @@ echo 'componenteIngredientes.value=componenteIngredientes.value + (componenteIng
 echo '}';
 echo '});';
 echo  '}';
+echo 'var nome = document.querySelector("#nome");';
+echo 'nome.addEventListener("input", function () {';
+echo 'nome.value = nome.value.toUpperCase();';
+echo '});';
 echo '</script>';
 	}
 }else{
