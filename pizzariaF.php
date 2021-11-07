@@ -8,26 +8,15 @@ if (isset($_POST["Inclui"])) {
 	if ($error == "") {
 		$db = new SQLite3("pizzaria.db");
 		$db->exec('PRAGMA foreign_keys = ON');
-		$db->exec("insert into pizza (comanda, tamanho, borda) values (".$_POST["numero"].",".$_POST['Tamanho'].",".$_POST['borda'].")");
+		$db->exec("insert into pizza (comanda, tamanho, borda) values (".$_POST["numero"].",'".$_POST['Tamanho']."',".$_POST['borda'].")");
 
-    $dom = new DOMDocument();
-    $dom->loadHTML("pizzariaF.php");
-    $table = $dom->getElementById('lista');
+    $pizza = $db->lastInsertRowID();
+    $sabores = explode(",", $_POST["componenteSabores"]);
 
-    echo 'oi';
-    foreach ($table->childNodes as $linha) {
-      if ($linha->nodeName == 'tr') {
-        foreach ($linha->childNodes as $celula) {
-          if ($celula->nodeName == 'td') {
-            if (strlen($celula->nodeValue)) {
-              echo "{$celula->nodeValue}\n";
-            }
-          }
-        }
-      }
+    foreach ($sabores as $sabor) {
+		  $db->exec("insert into pizzasabor (pizza, sabor) values (" . $pizza . ",". $sabor .")");
     }
     
-		$db->exec("insert into pizzasabor (pizza, sabor) values (".$db->lastInsertRowID().",".$_POST['Tamanho'].",".$_POST['borda'].")");
 		echo "Pizza incluída na comanda ".$_POST['numero']."!<br>\n";
 		$db->close();
 	}else{
@@ -87,21 +76,21 @@ $results = $db->query("select * from tipo");
 echo '</select>';
 echo '<select class="sabores" name="salgadatrad" id="salgadatrad" data-value="1" hidden>';
 echo '<option value="0" disabled selected>Selecionar Sabor</option>';
-$salgadatrad = $db->query("select sabor.nome as nome from sabor join tipo on sabor.tipo = tipo.codigo where tipo.codigo=1");
+$salgadatrad = $db->query("select sabor.nome as nome, sabor.codigo from sabor join tipo on sabor.tipo = tipo.codigo where tipo.codigo=1");
   while ($strad = $salgadatrad->fetchArray()){
   echo "<option value=\"".$strad["codigo"]."\">".ucfirst(strtolower($strad["nome"]))."</option>";
 }
 echo '</select>';
 echo '<select class="sabores" name="salgadaesp" id="salgadaesp" data-value="2" hidden>';
 echo '<option value="0" disabled selected>Selecionar Sabor</option>';
-$salgadaesp = $db->query("select sabor.nome as nome from sabor join tipo on sabor.tipo = tipo.codigo where tipo.codigo=2");
+$salgadaesp = $db->query("select sabor.nome as nome, sabor.codigo from sabor join tipo on sabor.tipo = tipo.codigo where tipo.codigo=2");
   while ($sesp = $salgadaesp->fetchArray()){
   echo "<option value=\"".$sesp["codigo"]."\">".ucfirst(strtolower($sesp["nome"]))."</option>";
 }
 echo '</select>';
 echo '<select class="sabores" name="docetrad" id="docetrad" data-value="3" hidden>';
 echo '<option value="0" disabled selected>Selecionar Sabor</option>';
-$docetrad = $db->query("select sabor.nome as nome from sabor join tipo on sabor.tipo = tipo.codigo where tipo.codigo=3");
+$docetrad = $db->query("select sabor.nome as nome, sabor.codigo from sabor join tipo on sabor.tipo = tipo.codigo where tipo.codigo=3");
   while ($dtrad = $docetrad->fetchArray()){
   echo "<option value=\"".$dtrad["codigo"]."\">".ucfirst(strtolower($dtrad["nome"]))."</option>";
 }
@@ -116,8 +105,8 @@ echo '<table id="lista"></table>';
 echo '</td>';
 echo '</tr>';
 echo '<tr>';
-echo '<td><input type="button" name="Inclui" value="Inclui" onClick="preencheSabores()"></td>';
-echo '<td><input type="text" id="componenteSabores" name="componenteSabores" value=""></td>';
+echo '<td><input type="submit" name="Inclui" value="Inclui" onClick="preencheSabores()"></td>';
+echo '<td><input type="text" id="componenteSabores" name="componenteSabores" hidden value=""></td>';
 echo '</tr>';
 echo '</tbody>';
 echo '</table>';
@@ -125,36 +114,59 @@ echo '</form>';
 echo '<script>';
 echo 'const armazena = [];';
 echo 'const sabores = document.querySelectorAll(".sabores");';
+  echo 'function indexOfArray(array, item) {';
+  echo '    for (var i = 0; i < array.length; i++) {';
+  echo '        if (array[i][0] == item[0] && array[i][1] == item[1]) {';
+  echo '            return i;   ';
+  echo '        }';
+  echo '    }';
+  echo '    return -1;';
+  echo '}';
 echo 'function tipo(val) {';
+  echo 'console.log(armazena);';
+
 echo 'sabores.forEach(sel => {';
 echo 'const aux = sel.dataset.value;';
 echo 'sel.hidden = (aux === val) ? false : true;';
 echo '});';
 echo '}';
 echo 'function add(element) {';
+  echo 'console.log(armazena);';
 echo 'if (element.selectedIndex === 0) {';
 echo 'return;';
 echo '}';
-echo 'const value = element.options[element.selectedIndex].text;';
-echo 'if (armazena.indexOf(value) !== -1) {';
+echo 'const value = element.options[element.selectedIndex].value;';
+echo 'const text = element.options[element.selectedIndex].text;';
+echo 'const object = [value, text];';
+echo 'if (indexOfArray(armazena, object) !== -1) {';
 echo 'return;';
 echo '} else {';
-echo 'armazena.push(value);';
+echo 'armazena.push(object);';
 echo '}';
 echo 'lista(armazena);';
 echo '}';
 echo 'function del(that) {';
-echo 'const value = that.parentElement.previousElementSibling.innerHTML;';
-echo 'armazena.splice(armazena.indexOf(value), 1);';
+
+echo 'const value = that.parentElement.previousElementSibling.attributes[0].nodeValue;';
+echo 'const text = that.parentElement.previousElementSibling.innerHTML;';
+echo 'const object = [value, text];';
+echo 'console.log("armazena");';
+echo 'console.log(armazena);';
+echo 'console.log("obj");';
+echo 'console.log(object);';
+echo 'console.log("index");';
+echo 'console.log(indexOfArray(armazena, object));';
+echo 'armazena.splice(indexOfArray(armazena, object), 1);';
 echo 'lista(armazena);';
 echo '}';
 echo 'function lista(list) {';
 echo 'const table = list.map(i => {';
-echo 'return `<tr><td class="saborEscolhido">${i}</td><td><input type="button" value="-" onclick="del(this)"></td></tr>`';
+echo 'return `<tr><td value="${i[0]}"class="saborEscolhido">${i[1]}</td><td><input type="button" value="-" onclick="del(this)"></td></tr>`';
 echo '});';
 echo 'return document.getElementById("lista").innerHTML = table.join("");';
 echo '}';
 echo 'function visible(sabores) {';
+  echo 'console.log(armazena);';
 echo 'let element;';
 echo 'sabores.forEach(sabor => {';
 echo 'if (!sabor.hidden) {';
@@ -170,10 +182,11 @@ echo 'componenteSabores.value="";';
 echo 'saboresEscolhidos.forEach(sabor => {';
 echo 'if (!sabor.hidden) {';
 echo 'console.log(sabor);';
-echo 'componenteSabores.value=componenteSabores.value + "," + sabor.innerText;';
+echo 'componenteSabores.value=componenteSabores.value + (componenteSabores.value == "" ? "" : ",") + sabor.attributes[0].nodeValue;';
 echo '}';
 echo '});';
 echo  '}';
+
 echo '</script>';
 	}
 
