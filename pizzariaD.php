@@ -47,6 +47,13 @@ if (isset($_GET["valor"])) $value = $_GET["valor"];
 if (isset($_GET["pago"])) $value = $_GET["pago"];
 echo "<input type=\"text\" id=\"valor\" name=\"valor\" value=\"".$value."\" size=\"20\"> \n";
 
+echo '<script>';
+echo 'var valor = document.querySelector("#valor");';
+echo 'valor.addEventListener("input", function () {';
+echo 'valor.value = valor.value.toUpperCase();';
+echo '});';
+echo '</script>';
+
 $parameters = array();
 if (isset($_GET["orderby"])) $parameters[] = "orderby=".$_GET["orderby"];
 if (isset($_GET["offset"])) $parameters[] = "offset=".$_GET["offset"];
