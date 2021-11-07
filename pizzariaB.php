@@ -14,9 +14,14 @@ if (isset($_POST["Inclui"])) {
 		$db = new SQLite3("pizzaria.db");
 		$db->exec("PRAGMA foreign_keys = ON");
 		$db->exec("insert into sabor (nome, tipo) values ('".$_POST["nome"]."', '".$_POST["tipo"]."')");
-		//$db->exec("insert into saboringrediente (sabor,ingrediente) values ('".lastInsertRowID()."','".$_POST[]."')");
-		echo $db->changes()." Pizza(s) incluída(s)<br>\n";
-		echo $db->lastInsertRowID()." é o código da última Pizza incluída.\n";
+		$sabor = $db->lastInsertRowID();
+		$ingredientes = explode(",", $_POST["componenteIngredientes"]);
+
+		foreach ($ingredientes as $ingrediente) {
+			$db->exec("insert into saboringrediente (sabor,ingrediente) values (".$sabor.",".$ingrediente.")");
+		}
+		
+		echo "Sabor " . $_POST["nome"] . " incluído!<br>";
 		$db->close();
 	}else{
 		echo "<font color=\"red\">".$error."</font>";
@@ -58,7 +63,8 @@ echo '<td><label for="lista">Ingredientes</label></td>';
 echo '<td><table id="lista"></table></td>';
 echo '</tr>';
 echo '<tr>';
-echo '<td><input type="submit" name="Inclui" value="Inclui"></td>';
+echo '<td><input type="submit" name="Inclui" value="Inclui" onClick="preencheIngredientes()"></td>';
+echo '<td><input type="text" id="componenteIngredientes" name="componenteIngredientes" hidden value=""></td>';
 echo '</tr>';
 echo '</tbody>';
 echo '</table>';
@@ -66,26 +72,50 @@ echo '</form>';
 echo '<script>';
 echo 'const armazena = [];';
 echo 'const select = document.insert.ingrediente;';
+echo 'function indexOfArray(array, item) {';
+echo '    for (var i = 0; i < array.length; i++) {';
+echo '        if (array[i][0] == item[0] && array[i][1] == item[1]) {';
+echo '            return i;   ';
+echo '        }';
+echo '    }';
+echo '    return -1;';
+echo '}';
 echo 'function add() {';
-echo 'const value = select.options[select.selectedIndex].text;';
-echo 'if (armazena.indexOf(value) !== -1) {';
+echo 'const value = select.options[select.selectedIndex].value;';
+echo 'const text = select.options[select.selectedIndex].text;';
+echo 'const object = [value, text];';
+echo 'if (indexOfArray(armazena, object) !== -1) {';
 echo 'return;';
 echo '} else {';
-echo 'armazena.push(value);';
+echo 'armazena.push(object);';
 echo '}';
 echo 'lista(armazena);';
 echo '}';
 echo 'function del(that) {';
-echo 'const value = that.parentElement.previousElementSibling.innerHTML;';
-echo 'armazena.splice(armazena.indexOf(value), 1);';
+echo 'const value = that.parentElement.previousElementSibling.attributes[0].nodeValue;';
+echo 'const text = that.parentElement.previousElementSibling.innerHTML;';
+echo 'const object = [value, text];';
+echo 'armazena.splice(indexOfArray(armazena, object), 1);';
 echo 'lista(armazena);';
 echo '}';
 echo 'function lista(list) {';
 echo 'const table = list.map(i => {';
-echo 'return `<tr><td>${i}</td><td><input type="button" value="-" onclick="del(this)"></td></tr>`';
+echo 'return `<tr><td value="${i[0]}" class="ingredienteEscolhido">${i[1]}</td><td><input type="button" value="-" onclick="del(this)"></td></tr>`';
 echo '});';
 echo 'return document.getElementById("lista").innerHTML = table.join("");';
 echo '}';
+echo 'function preencheIngredientes(){';
+echo 'let componenteIngredientes = document.getElementById("componenteIngredientes");';
+ECHO 'console.log(componenteIngredientes);';
+echo 'let ingredientesEscolhidos = document.querySelectorAll(".ingredienteEscolhido");';
+echo 'componenteIngredientes.value="";';
+echo 'ingredientesEscolhidos.forEach(ingrediente => {';
+echo 'if (!ingrediente.hidden) {';
+echo 'console.log(ingrediente);';
+echo 'componenteIngredientes.value=componenteIngredientes.value + (componenteIngredientes.value == "" ? "" : ",") + ingrediente.attributes[0].nodeValue;';
+echo '}';
+echo '});';
+echo  '}';
 echo '</script>';
 	}
 
