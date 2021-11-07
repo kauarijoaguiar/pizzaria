@@ -45,7 +45,7 @@ if (isset($_GET["mesa"])) $value = $_GET["mesa"];
 if (isset($_GET["pizza"])) $value = $_GET["pizza"];
 if (isset($_GET["valor"])) $value = $_GET["valor"];
 if (isset($_GET["pago"])) $value = $_GET["pago"];
-echo "<input type=\"text\" id=\"valor\" name=\"valor\" value=\"".$value."\" size=\"20\"> \n";
+echo "<input type=\"text\" id=\"valor\" name=\"valor\" value=\"".$value."\" size=\"20\" pattern=\"[A-Z\s]+$\"> \n";
 
 echo '<script>';
 echo 'var valor = document.querySelector("#valor");';
