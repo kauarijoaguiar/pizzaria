@@ -39,12 +39,10 @@ PRAGMA foreign_keys = ON;
 			echo '<td><label for="tipo">Tipo</label></td>';
 			echo '<td><select name="tipo" id="tipo">';
 			$results = $db->query("select * from tipo");
+			$tipoDoSabor= $db->query("select tipo from sabor where sabor.codigo=". $_GET["codigo"])->fetchArray()["tipo"];
 			while ($row = $results->fetchArray()) {
-				echo "<option value=\"" . $row["codigo"] . "\">" . $row["nome"] . "</option>";
-				$tp = $db->query("select tipo.codigo as codigo, tipo.nome as nome from tipo join sabor on sabor.tipo = tipo.codigo where sabor.codigo =" . $_GET["codigo"]);
-				while ($rowtipo = $tp->fetchArray()) {
-					echo "<option value=\"nome\" selected disabled hidden>" . $rowtipo["nome"] . "</option>";
-				}
+				$propriedade = ($tipoDoSabor == $row["codigo"]) == 1 ? " selected " : " ";
+				echo "<option value=\"" . $row["codigo"] . "\"" . $propriedade .">" . $row["nome"] . "</option>";
 			}
 			echo '</select></td>';
 			echo '</tr>';
@@ -155,7 +153,7 @@ PRAGMA foreign_keys = ON;
 
 				foreach ($ingredientes as $ingrediente) {
 					$db->exec("insert into saboringrediente (sabor,ingrediente) values (" . $_POST["codigo"] . "," . $ingrediente . ")");
-				}
+				} 
 
 				echo $db->changes() . " Sabor alterado!";
 				$db->close();
