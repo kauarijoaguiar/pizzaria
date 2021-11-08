@@ -72,8 +72,7 @@
 	$total = $db->query("select count( distinct codigoSabor) as total from (select sabor.codigo as codigoSabor, sabor.nome as nomeSabor, tipo.nome as tipo, group_concat(ingrediente.nome, ', ') as ingrediente from sabor 
 	join saboringrediente on saboringrediente.sabor = sabor.codigo 
 	join  ingrediente on saboringrediente.ingrediente=ingrediente.codigo 
-	join tipo on sabor.tipo=tipo.codigo "
-		. $where. " group by sabor.codigo);")->fetchArray()["total"];
+	join tipo on sabor.tipo=tipo.codigo group by sabor.codigo) " . $where . ";")->fetchArray()["total"];
 
 	$orderby = (isset($_GET["orderby"])) ? $_GET["orderby"] : "codigoSabor asc";
 
