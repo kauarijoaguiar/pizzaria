@@ -82,7 +82,29 @@
 
 	$where = (count($where) > 0) ? "where " . implode(" and ", $where) : "";
 
-	$total = $db->query("select count(*) as total from comanda " . $where)->fetchArray()["total"];
+	$total = $db->query("select count(*) as total from (select numero, 
+	case cast (strftime('%w', data) as integer)
+  	when 0 then 'Dom'
+  	when 1 then 'Seg'
+  	when 2 then 'Ter'
+ 	when 3 then 'Qua'
+  	when 4 then 'Qui'
+  	when 5 then 'Sex'
+  	else 'Sáb' end || ' ' || strftime('%d/%m/%Y', data)  as data, mesa, pago, coalesce(numeroPizza.pizza,0) as pizza, coalesce(valorComanda.total,0) as valor from comanda left join 
+	  (select count(codigo) as pizza, pizza.comanda from pizza join comanda on pizza.comanda = comanda.numero group by comanda) numeroPizza on comanda.numero = numeropizza.comanda 
+	  left join (select sum(tmp.preco) as total, numeroComanda
+	from
+		(select
+			max(case
+					when borda.preco is null then 0
+					else borda.preco
+				end+precoportamanho.preco) as preco, comanda.numero as numeroComanda
+		from comanda
+			join pizza on pizza.comanda = comanda.numero
+			join pizzasabor on pizzasabor.pizza = pizza.codigo
+			join sabor on pizzasabor.sabor = sabor.codigo
+			join precoportamanho on precoportamanho.tipo = sabor.tipo and precoportamanho.tamanho = pizza.tamanho
+			left join borda on pizza.borda = borda.codigo group by pizza.codigo) tmp group by numeroComanda) valorComanda on comanda.numero = valorComanda.numeroComanda) " . $where)->fetchArray()["total"];
 
 	$orderby = (isset($_GET["orderby"])) ? $_GET["orderby"] : "numero asc";
 
@@ -91,24 +113,28 @@
 
 
 	$results = $db->query("select numero, 
-case cast (strftime('%w', data) as integer)
-  when 0 then 'Dom'
-  when 1 then 'Seg'
-  when 2 then 'Ter'
-  when 3 then 'Qua'
-  when 4 then 'Qui'
-  when 5 then 'Sex'
-  else 'Sáb' end || ' ' || strftime('%d/%m/%Y', data)  as data, mesa, pago from comanda" . $where . " order by " . $orderby . " limit " . $limit . " offset " . $offset);
-
-	// $results = $db->query("select numero, 
-	// case cast (strftime('%w', data) as integer)
-	//   when 0 then 'Sunday'
-	//   when 1 then 'Monday'
-	//   when 2 then 'Tuesday'
-	//   when 3 then 'Wednesday'
-	//   when 4 then 'Thursday'
-	//   when 5 then 'Friday'
-	//   else 'Saturday' end as data, mesa, pago, count(pizza.codigo) as pizza from comanda join pizza on pizza.comanda = comanda.numero ".$where." order by ".$orderby." limit ".$limit." offset ".$offset);
+	case cast (strftime('%w', data) as integer)
+  	when 0 then 'Dom'
+  	when 1 then 'Seg'
+  	when 2 then 'Ter'
+ 	when 3 then 'Qua'
+  	when 4 then 'Qui'
+  	when 5 then 'Sex'
+  	else 'Sáb' end || ' ' || strftime('%d/%m/%Y', data)  as data, mesa, pago, coalesce(numeroPizza.pizza,0) as pizza, coalesce(valorComanda.total,0) as valor from comanda left join 
+	  (select count(codigo) as pizza, pizza.comanda from pizza join comanda on pizza.comanda = comanda.numero group by comanda) numeroPizza on comanda.numero = numeropizza.comanda 
+	  left join (select sum(tmp.preco) as total, numeroComanda
+	from
+		(select
+			max(case
+					when borda.preco is null then 0
+					else borda.preco
+				end+precoportamanho.preco) as preco, comanda.numero as numeroComanda
+		from comanda
+			join pizza on pizza.comanda = comanda.numero
+			join pizzasabor on pizzasabor.pizza = pizza.codigo
+			join sabor on pizzasabor.sabor = sabor.codigo
+			join precoportamanho on precoportamanho.tipo = sabor.tipo and precoportamanho.tamanho = pizza.tamanho
+			left join borda on pizza.borda = borda.codigo group by pizza.codigo) tmp group by numeroComanda) valorComanda on comanda.numero = valorComanda.numeroComanda " . $where . " order by " . $orderby . " limit " . $limit . " offset " . $offset);
 
 	while ($row = $results->fetchArray()) {
 		echo "<tr>";
@@ -122,34 +148,19 @@ case cast (strftime('%w', data) as integer)
 		}
 		echo "</td>";
 
+		echo "<td>";
+		echo $row["pizza"];
+		echo "</td>";
+		echo '<td>' . ($row["pizza"] > 0 ? "<a href=\"pizzariaG.php?numero=" . $row["numero"] . "\">&#128064;</a>" : '') . '</td>';
 		$results3 = $db->query("select count(codigo) as pizza from pizza join comanda on pizza.comanda = comanda.numero where comanda.numero= " . $row["numero"]);
-		while ($row3 = $results3->fetchArray()) {
-			echo "<td>";
-			echo $row3["pizza"];
-			echo "</td>";
-			echo '<td>' . ($row3["pizza"] > 0 ? "<a href=\"pizzariaG.php?numero=" . $row["numero"] . "\">&#128064;</a>" : '') . '</td>';
-		}
 		echo "<td>\n";
 
-		$results4 = $db->query("select sum(tmp.preco) as total
-	from
-		(select
-			max(case
-					when borda.preco is null then 0
-					else borda.preco
-				end+precoportamanho.preco) as preco
-		from comanda
-			join pizza on pizza.comanda = comanda.numero
-			join pizzasabor on pizzasabor.pizza = pizza.codigo
-			join sabor on pizzasabor.sabor = sabor.codigo
-			join precoportamanho on precoportamanho.tipo = sabor.tipo and precoportamanho.tamanho = pizza.tamanho
-			left join borda on pizza.borda = borda.codigo
-		where comanda.numero = " . $row["numero"] . " group by pizza.codigo) as tmp;");
-		while ($row4 = $results4->fetchArray()) {
-			echo "R$ " . ($row4["total"] == "" ? "0,0" : (str_replace(".", ",", $row4["total"])));
-		}
+		echo "R$ " . ($row["valor"] == "" ? "0,0" : (str_replace(".", ",", $row["valor"])));
+		
 		echo "</td>\n";
 
+
+		;
 
 		echo "<td>" . ($row["pago"] > 0 ? 'Sim' : 'Não') . "</td>\n";
 		while ($row3 = $results3->fetchArray()) {
