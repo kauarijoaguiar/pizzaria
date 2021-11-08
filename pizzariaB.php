@@ -119,6 +119,7 @@
 		echo '});';
 		echo 'document.insert.onsubmit = (evt) => {';
 		echo 'if (armazena.length <= 0) {';
+		echo 'alert("Preencha a lista de ingredientes!");';
 		echo 'evt.preventDefault();';
 		echo '}';
 		echo '}';

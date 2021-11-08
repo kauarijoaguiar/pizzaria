@@ -192,6 +192,7 @@
     echo  '}';
     echo 'document.insertPizzaNaComanda.onsubmit = (evt) => {';
     echo 'if (armazena.length <= 0) {';
+    echo 'alert("Preencha a lista de saboress!");';
     echo 'evt.preventDefault();';
     echo '}';
     echo '}';
