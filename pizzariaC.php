@@ -154,7 +154,6 @@ PRAGMA foreign_keys = ON;
 				foreach ($ingredientes as $ingrediente) {
 					$db->exec("insert into saboringrediente (sabor,ingrediente) values (" . $_POST["codigo"] . "," . $ingrediente . ")");
 				} 
-
 				echo $db->changes() . " Sabor alterado!";
 				$db->close();
 			} else {
